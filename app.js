@@ -114,7 +114,7 @@ app.use('/plugin-list', require('./routes/pluginList'));
 app.use('/add-plugin', require('./routes/addPlugin'));
 app.use('/getting-started', require('./routes/gettingStarted'));
 app.use('/help/custom-charts', require('./routes/customCharts'));
-app.use('/imprint', require('./routes/imprint'));
+app.use("/credits", require("./routes/credits"));
 app.use('/privacy-policy', require('./routes/privacyPolicy'));
 app.use('/terms-of-use', require('./routes/termsOfUse'));
 app.use('/imprint', require('./routes/imprint'));
