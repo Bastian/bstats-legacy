@@ -106,6 +106,7 @@ app.use('/login', require('./routes/login'));
 app.use('/logout', require('./routes/logout'));
 app.use('/register', require('./routes/register'));
 app.use('/change-password', require('./routes/changePassword'));
+app.use('/.well-known', require('./routes/wellKnown'));
 app.use('/submitData', require('./routes/submitData'));
 app.use('/global', require('./routes/global'));
 app.use('/plugin', require('./routes/plugin'));
