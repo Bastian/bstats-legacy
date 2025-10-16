@@ -28,32 +28,21 @@
     }
 
     var accentPalette = window.__bstatsAccentPalette || {
-        teal: { base: '#0f766e', dark: '#115e59', soft: '#ccfbf1', contrast: '#f8fafc' },
-        red: { base: '#b91c1c', dark: '#991b1b', soft: '#fee2e2', contrast: '#f8fafc' },
-        blue: { base: '#1d4ed8', dark: '#1e40af', soft: '#dbeafe', contrast: '#f8fafc' },
-        pink: { base: '#be185d', dark: '#9d174d', soft: '#fce7f3', contrast: '#f8fafc' },
-        brown: { base: '#92400e', dark: '#78350f', soft: '#f5e2c8', contrast: '#fdfdfc' },
-        green: { base: '#15803d', dark: '#166534', soft: '#dcfce7', contrast: '#f8fafc' },
-        black: { base: '#0b1120', dark: '#020617', soft: '#1e293b', contrast: '#f8fafc' },
-        purple: { base: '#6d28d9', dark: '#5b21b6', soft: '#ede9fe', contrast: '#f8fafc' },
-        'deep-purple': { base: '#5b21b6', dark: '#4c1d95', soft: '#ede9fe', contrast: '#f8fafc' },
-        indigo: { base: '#4338ca', dark: '#3730a3', soft: '#e0e7ff', contrast: '#f8fafc' },
-        'light-blue': { base: '#0369a1', dark: '#075985', soft: '#e0f2fe', contrast: '#f8fafc' },
-        cyan: { base: '#0e7490', dark: '#155e75', soft: '#cffafe', contrast: '#f8fafc' },
-        'light-green': { base: '#4d7c0f', dark: '#3f6212', soft: '#ecfccb', contrast: '#fdfcf4' },
-        lime: { base: '#3f6212', dark: '#365314', soft: '#f7fee7', contrast: '#fdfcf4' },
-        yellow: { base: '#a16207', dark: '#854d0e', soft: '#fef9c3', contrast: '#1f2937' },
-        amber: { base: '#b45309', dark: '#92400e', soft: '#fef3c7', contrast: '#fdfdfc' },
-        orange: { base: '#c2410c', dark: '#9a3412', soft: '#ffedd5', contrast: '#fff7ed' },
-        'deep-orange': { base: '#9a3412', dark: '#7c2d12', soft: '#ffe2d5', contrast: '#fff8f6' },
-        grey: { base: '#4b5563', dark: '#374151', soft: '#f3f4f6', contrast: '#f8fafc' },
-        'blue-grey': { base: '#334155', dark: '#1e293b', soft: '#e2e8f0', contrast: '#f8fafc' }
+        indigo: { base: '#4f46e5', dark: '#4338ca', soft: '#e0e7ff', contrast: '#0f172a' },
+        sky: { base: '#0ea5e9', dark: '#0284c7', soft: '#e0f2fe', contrast: '#0f172a' },
+        emerald: { base: '#10b981', dark: '#059669', soft: '#d1fae5', contrast: '#064e3b' },
+        amber: { base: '#f59e0b', dark: '#d97706', soft: '#fef3c7', contrast: '#78350f' },
+        rose: { base: '#f43f5e', dark: '#e11d48', soft: '#ffe4e6', contrast: '#881337' },
+        slate: { base: '#475569', dark: '#334155', soft: '#e2e8f0', contrast: '#0f172a' },
+        violet: { base: '#8b5cf6', dark: '#7c3aed', soft: '#ede9fe', contrast: '#2e1065' },
+        lime: { base: '#65a30d', dark: '#4d7c0f', soft: '#ecfccb', contrast: '#1a2e05' },
+        teal: { base: '#0f766e', dark: '#115e59', soft: '#ccfbf1', contrast: '#0f172a' }
     };
     window.__bstatsAccentPalette = accentPalette;
 
-    var accentKey = '<%= customColor1 %>' || 'teal';
+    var accentKey = '<%= customColor1 %>' || 'indigo';
     window.__bstatsAccent = accentKey;
-    var palette = accentPalette[accentKey] || accentPalette['teal'];
+    var palette = accentPalette[accentKey] || accentPalette['indigo'];
     var root = document.documentElement;
     if (root) {
         root.style.setProperty('--accent-color', palette.base);
@@ -81,142 +70,204 @@
     }
 </style>
 
-<header class="relative z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
-    <div class="mx-auto flex max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
-        <div class="flex h-20 items-center justify-between">
-            <a href="/" class="flex items-center gap-3 text-base font-semibold tracking-tight text-white">
-                <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-sm font-bold uppercase">bS</span>
-                <span class="hidden text-lg sm:inline">bStats</span>
+<header class="relative z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div class="hidden border-b border-slate-200/70 bg-sky-50/80 md:block">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600 sm:px-6 lg:px-8">
+            <span class="flex items-center gap-2">
+                <span class="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                Built with the Minecraft plugin community
+            </span>
+            <a href="https://github.com/Bastian/bStats" class="inline-flex items-center gap-2 text-slate-500 transition hover:text-slate-900" target="_blank" rel="noopener">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.58 2 12.17c0 4.47 2.87 8.26 6.85 9.6.5.1.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.37-3.37-1.37-.46-1.18-1.12-1.5-1.12-1.5-.92-.64.07-.63.07-.63 1.01.07 1.54 1.06 1.54 1.06.9 1.58 2.36 1.12 2.94.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.05 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.2 9.2 0 0 1 5 0c1.9-1.32 2.74-1.05 2.74-1.05.56 1.41.21 2.45.1 2.71.64.72 1.02 1.64 1.02 2.76 0 3.92-2.34 4.79-4.57 5.05.36.32.68.95.68 1.93 0 1.39-.01 2.5-.01 2.83 0 .27.18.59.69.48A10.2 10.2 0 0 0 22 12.17C22 6.58 17.52 2 12 2z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="hidden sm:inline">GitHub</span>
             </a>
-            <nav class="hidden items-center gap-10 text-sm font-medium text-slate-300 lg:flex">
-                <a href="/plugin-list" class="transition hover:text-white">Plugin list</a>
-                <a href="/plugin/1337/random" class="transition hover:text-white">Random plugin</a>
-                <% if (allSoftware && allSoftware.length > 0) { %>
-                <details class="group relative">
-                    <summary class="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-300 transition hover:text-white">
-                        <span>Global stats</span>
-                        <svg class="h-4 w-4 transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 0 1 1.08 1.04l-4.25 4.25a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd"></path>
-                        </svg>
-                    </summary>
-                    <div class="invisible absolute right-0 top-full z-40 mt-4 w-64 -translate-y-2 rounded-2xl border border-white/10 bg-slate-900/95 p-3 text-sm text-slate-200 opacity-0 shadow-xl backdrop-blur transition duration-200 group-open:visible group-open:translate-y-0 group-open:opacity-100">
-                        <div class="grid gap-1">
-                            <% for (var i = 0; i < allSoftware.length; i++) { %>
-                            <% if (allSoftware[i].globalPlugin) { %>
-                            <a href="/global/<%= allSoftware[i].url %>" class="flex items-center justify-between rounded-xl px-3 py-2 transition hover:bg-white/10 hover:text-white">
-                                <span class="truncate"><%= allSoftware[i].name %></span>
-                                <svg class="h-4 w-4 opacity-60" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M6.22 5.22a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 1 1-1.06-1.06L9.44 11H5.5a.75.75 0 0 1 0-1.5h3.94L6.22 6.28a.75.75 0 0 1 0-1.06z" clip-rule="evenodd"></path>
-                                </svg>
-                            </a>
-                            <% } %>
-                            <% } %>
-                            <% if (!allSoftware.some(function (s) { return s.globalPlugin; })) { %>
-                            <span class="rounded-xl bg-white/5 px-3 py-2 text-sm text-slate-400">No global stats available yet.</span>
-                            <% } %>
-                        </div>
-                    </div>
-                </details>
-                <% } %>
-                <a href="/getting-started" class="transition hover:text-white">Docs</a>
-                <a href="/credits" class="transition hover:text-white">Credits</a>
-            </nav>
-            <div class="hidden items-center gap-3 lg:flex">
-                <% if (loggedIn) { %>
-                <a href="/add-plugin" class="accent-bg inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition">
-                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75V9.25h5.5a.75.75 0 0 1 0 1.5h-5.5v5.5a.75.75 0 0 1-1.5 0v-5.5H3.75a.75.75 0 0 1 0-1.5h5.5V3.75A.75.75 0 0 1 10 3z" clip-rule="evenodd"></path>
-                    </svg>
-                    Add plugin
-                </a>
-                <details class="group relative">
-                    <summary class="flex cursor-pointer items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white transition hover:border-white/30">
-                        <span class="max-w-[160px] truncate"><%= user.username %></span>
-                        <svg class="h-4 w-4 transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 0 1 1.08 1.04l-4.25 4.25a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd"></path>
-                        </svg>
-                    </summary>
-                    <div class="invisible absolute right-0 top-full z-40 mt-4 w-72 -translate-y-2 rounded-2xl border border-white/10 bg-slate-900/95 p-4 text-sm text-slate-200 opacity-0 shadow-xl backdrop-blur transition duration-200 group-open:visible group-open:translate-y-0 group-open:opacity-100">
-                        <div class="flex flex-col gap-3">
-                            <a href="/author/<%= user.username %>" class="transition hover:text-white">My profile</a>
-                            <a href="/change-password" class="transition hover:text-white">Change password</a>
-                            <a href="/logout" class="transition hover:text-white">Logout</a>
-                            <% if (myPlugins && myPlugins.length > 0) { %>
-                            <div class="h-px bg-white/10"></div>
-                            <div class="text-xs uppercase tracking-wide text-slate-400">My plugins</div>
-                            <div class="max-h-56 space-y-2 overflow-y-auto pr-1">
-                                <% for (var i = 0; i < myPlugins.length; i++) { %>
-                                <a href="/plugin/<%= myPlugins[i].software.url %>/<%= myPlugins[i].name %>" class="block truncate rounded-lg px-2 py-1 text-sm transition hover:bg-white/10 hover:text-white"><%= myPlugins[i].name %> (<%= myPlugins[i].software.name %>)</a>
-                                <% } %>
-                            </div>
-                            <% } %>
-                        </div>
-                    </div>
-                </details>
-                <% } else { %>
-                <a href="/login" class="rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/40">Login</a>
-                <a href="/register" class="accent-bg inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition">Create account</a>
-                <% } %>
-            </div>
-            <button id="mobile-nav-toggle" type="button" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 p-2 text-slate-300 transition hover:border-white/30 hover:text-white lg:hidden">
-                <span class="sr-only">Toggle navigation</span>
-                <svg class="h-5 w-5" data-icon="menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7h16M4 12h16M4 17h16"></path>
-                </svg>
-                <svg class="hidden h-5 w-5" data-icon="close" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 6l12 12M6 18L18 6"></path>
-                </svg>
-            </button>
         </div>
-        <div id="mobile-nav-panel" class="hidden flex-col gap-6 border-t border-white/10 py-6 text-sm font-medium text-slate-200 lg:hidden">
-            <nav class="flex flex-col gap-3">
-                <a href="/plugin-list" class="transition hover:text-white">Plugin list</a>
-                <a href="/plugin/1337/random" class="transition hover:text-white">Random plugin</a>
-                <a href="/getting-started" class="transition hover:text-white">Getting started</a>
-                <a href="/credits" class="transition hover:text-white">Credits</a>
-            </nav>
+    </div>
+    <div class="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="/" class="flex items-center gap-3 text-base font-semibold tracking-tight text-slate-900">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-[color:var(--accent-color-soft,#e0f2fe)] text-sm font-bold uppercase text-[color:var(--accent-color-dark,#1d4ed8)] shadow-sm shadow-slate-900/5">bS</span>
+            <div class="flex flex-col leading-tight">
+                <span class="text-lg font-semibold">bStats</span>
+                <span class="text-xs font-medium uppercase tracking-[0.28em] text-slate-400">Metrics for fun</span>
+            </div>
+        </a>
+        <nav class="hidden items-center gap-6 text-sm font-medium text-slate-700 lg:flex">
+            <a href="/plugin-list" class="rounded-full px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Plugin list</a>
+            <a href="/plugin/1337/random" class="rounded-full px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Random plugin</a>
+            <details class="group relative">
+                <summary class="flex cursor-pointer items-center gap-2 rounded-full px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">
+                    Docs
+                    <svg class="h-4 w-4 opacity-60 transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.094l3.71-3.862a.75.75 0 1 1 1.08 1.04l-4.25 4.417a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd"></path>
+                    </svg>
+                </summary>
+                <div class="absolute left-0 top-full z-50 mt-3 hidden w-56 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-900/10 group-open:flex group-open:flex-col">
+                    <a href="/getting-started" class="rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Getting started</a>
+                    <a href="https://github.com/bStats-dev/bStats-Metrics" target="_blank" rel="noopener" class="rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Integration docs</a>
+                    <a href="/what-is-my-plugin-id" class="rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Find your plugin ID</a>
+                    <a href="/help/custom-charts" class="rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Custom charts</a>
+                    <a href="/help/rest-api" class="rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">REST API</a>
+                    <a href="/faq" class="rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">FAQ</a>
+                </div>
+            </details>
             <% if (allSoftware && allSoftware.length > 0 && allSoftware.some(function (s) { return s.globalPlugin; })) { %>
-            <div>
-                <div class="text-xs uppercase tracking-wide text-slate-400">Global stats</div>
+            <details class="group relative">
+                <summary class="flex cursor-pointer items-center gap-2 rounded-full px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">
+                    Global stats
+                    <svg class="h-4 w-4 opacity-60 transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.094l3.71-3.862a.75.75 0 1 1 1.08 1.04l-4.25 4.417a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd"></path>
+                    </svg>
+                </summary>
+                <div class="absolute left-0 top-full z-50 mt-3 hidden max-h-72 w-64 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-900/10 group-open:flex group-open:flex-col">
+                    <% for (var i = 0; i < allSoftware.length; i++) { %>
+                    <% if (allSoftware[i].globalPlugin) { %>
+                    <a href="/global/<%= allSoftware[i].url %>" class="flex items-center justify-between rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
+                        <span class="truncate"><%= allSoftware[i].name %></span>
+                        <svg class="h-4 w-4 opacity-50" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M6.22 5.22a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06L9.44 11H5.5a.75.75 0 0 1 0-1.5h3.94L6.22 6.28a.75.75 0 0 1 0-1.06z" clip-rule="evenodd"></path>
+                        </svg>
+                    </a>
+                    <% } %>
+                    <% } %>
+                </div>
+            </details>
+            <% } %>
+            <a href="/credits" class="rounded-full px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Credits</a>
+        </nav>
+
+        <div class="hidden items-center gap-4 lg:flex">
+            <% if (loggedIn) { %>
+            <a href="/add-plugin" class="accent-bg inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold">
+                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v5.5h5.5a.75.75 0 0 1 0 1.5h-5.5v5.5a.75.75 0 0 1-1.5 0v-5.5h-5.5a.75.75 0 0 1 0-1.5h5.5v-5.5A.75.75 0 0 1 10 3z" clip-rule="evenodd"></path>
+                </svg>
+                Add plugin
+            </a>
+            <details class="group relative">
+                <summary class="flex cursor-pointer items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm shadow-slate-900/5 transition hover:bg-slate-200">
+                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color:var(--accent-color-soft,#e0f2fe)] text-sm font-semibold text-[color:var(--accent-color-dark,#1d4ed8)]">
+                        <%= user && user.username ? user.username.charAt(0).toUpperCase() : '?' %>
+                    </span>
+                    <span class="max-w-[10rem] truncate"><%= user && user.username ? user.username : 'Account' %></span>
+                    <svg class="h-4 w-4 opacity-60 transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.094l3.71-3.862a.75.75 0 1 1 1.08 1.04l-4.25 4.417a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd"></path>
+                    </svg>
+                </summary>
+                <div class="absolute right-0 top-full z-50 mt-3 hidden w-64 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-900/10 group-open:flex group-open:flex-col">
+                    <div class="rounded-xl bg-slate-50 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Signed in</div>
+                    <a href="/author/<%= user.username %>" class="mt-3 rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">My profile</a>
+                    <a href="/change-password" class="rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Change password</a>
+                    <a href="/logout" class="rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Logout</a>
+                    <% if (myPlugins && myPlugins.length > 0) { %>
+                    <div class="mt-3 border-t border-slate-200 pt-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">My plugins</div>
+                    <div class="mt-2 max-h-48 space-y-2 overflow-y-auto pr-1">
+                        <% for (var i = 0; i < myPlugins.length; i++) { %>
+                        <a href="/plugin/<%= myPlugins[i].software.url %>/<%= myPlugins[i].name %>" class="block truncate rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
+                            <span class="font-medium text-slate-700"><%= myPlugins[i].name %></span>
+                            <span class="ml-2 text-xs text-slate-400"><%= myPlugins[i].software.name %></span>
+                        </a>
+                        <% } %>
+                    </div>
+                    <% } %>
+                </div>
+            </details>
+            <% } else { %>
+            <a href="/login" class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm shadow-slate-900/5 transition hover:border-slate-300 hover:text-slate-900">Log in</a>
+            <a href="/register" class="accent-bg inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold">Join the project</a>
+            <% } %>
+        </div>
+
+        <button id="mobile-nav-toggle" type="button" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-500 shadow-sm shadow-slate-900/5 transition hover:border-slate-300 hover:text-slate-900 lg:hidden">
+            <span class="sr-only">Toggle navigation</span>
+            <svg class="h-5 w-5" data-icon="menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7h16M4 12h16M4 17h16"></path>
+            </svg>
+            <svg class="hidden h-5 w-5" data-icon="close" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 6l12 12M6 18 18 6"></path>
+            </svg>
+        </button>
+    </div>
+
+    <div id="mobile-nav-panel" class="hidden flex-col gap-6 border-t border-slate-200 bg-white px-4 py-6 text-sm text-slate-700 shadow-inner shadow-slate-900/5 sm:px-6 lg:hidden">
+        <nav class="flex flex-col gap-3">
+            <a href="/plugin-list" class="rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Plugin list</a>
+            <a href="/plugin/1337/random" class="rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Random plugin</a>
+            <details class="group rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                <summary class="flex cursor-pointer items-center justify-between gap-2 text-sm font-semibold">
+                    Docs
+                    <svg class="h-4 w-4 opacity-60 transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.094l3.71-3.862a.75.75 0 1 1 1.08 1.04l-4.25 4.417a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd"></path>
+                    </svg>
+                </summary>
+                <div class="mt-3 flex flex-col gap-2">
+                    <a href="/getting-started" class="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-white hover:text-slate-900">Getting started</a>
+                    <a href="https://github.com/bStats-dev/bStats-Metrics" target="_blank" rel="noopener" class="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-white hover:text-slate-900">Integration docs</a>
+                    <a href="/what-is-my-plugin-id" class="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-white hover:text-slate-900">Find your plugin ID</a>
+                    <a href="/help/custom-charts" class="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-white hover:text-slate-900">Custom charts</a>
+                    <a href="/help/rest-api" class="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-white hover:text-slate-900">REST API</a>
+                    <a href="/faq" class="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-white hover:text-slate-900">FAQ</a>
+                </div>
+            </details>
+            <% if (allSoftware && allSoftware.length > 0 && allSoftware.some(function (s) { return s.globalPlugin; })) { %>
+            <details class="group rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                <summary class="flex cursor-pointer items-center justify-between gap-2 text-sm font-semibold">
+                    Global stats
+                    <svg class="h-4 w-4 opacity-60 transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.094l3.71-3.862a.75.75 0 1 1 1.08 1.04l-4.25 4.417a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd"></path>
+                    </svg>
+                </summary>
                 <div class="mt-3 grid gap-2">
                     <% for (var i = 0; i < allSoftware.length; i++) { %>
                     <% if (allSoftware[i].globalPlugin) { %>
-                    <a href="/global/<%= allSoftware[i].url %>" class="flex items-center justify-between rounded-xl border border-white/10 px-3 py-2 transition hover:border-white/30 hover:text-white">
+                    <a href="/global/<%= allSoftware[i].url %>" class="flex items-center justify-between rounded-lg px-3 py-2 text-slate-600 transition hover:bg-white hover:text-slate-900">
                         <span class="truncate"><%= allSoftware[i].name %></span>
-                        <svg class="h-4 w-4 opacity-60" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M6.22 5.22a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 1 1-1.06-1.06L9.44 11H5.5a.75.75 0 0 1 0-1.5h3.94L6.22 6.28a.75.75 0 0 1 0-1.06z" clip-rule="evenodd"></path>
+                        <svg class="h-4 w-4 opacity-50" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M6.22 5.22a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06L9.44 11H5.5a.75.75 0 0 1 0-1.5h3.94L6.22 6.28a.75.75 0 0 1 0-1.06z" clip-rule="evenodd"></path>
                         </svg>
                     </a>
                     <% } %>
                     <% } %>
                 </div>
-            </div>
+            </details>
             <% } %>
-            <% if (loggedIn && myPlugins && myPlugins.length > 0) { %>
-            <div>
-                <div class="text-xs uppercase tracking-wide text-slate-400">My plugins</div>
-                <div class="mt-3 grid gap-2">
-                    <% for (var i = 0; i < myPlugins.length; i++) { %>
-                    <a href="/plugin/<%= myPlugins[i].software.url %>/<%= myPlugins[i].name %>" class="flex items-center justify-between rounded-xl border border-white/10 px-3 py-2 transition hover:border-white/30 hover:text-white">
-                        <span class="truncate"><%= myPlugins[i].name %></span>
-                        <span class="ml-3 text-xs text-slate-400"><%= myPlugins[i].software.name %></span>
-                    </a>
-                    <% } %>
+            <a href="/credits" class="rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Credits</a>
+        </nav>
+
+        <% if (loggedIn) { %>
+        <div class="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <div class="flex items-center gap-3">
+                <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--accent-color-soft,#e0f2fe)] text-sm font-semibold text-[color:var(--accent-color-dark,#1d4ed8)]">
+                    <%= user && user.username ? user.username.charAt(0).toUpperCase() : '?' %>
+                </span>
+                <div>
+                    <div class="text-sm font-semibold text-slate-700"><%= user && user.username ? user.username : 'Account' %></div>
+                    <div class="text-xs uppercase tracking-[0.2em] text-slate-400">Signed in</div>
                 </div>
             </div>
-            <% } %>
-            <div class="flex flex-col gap-3">
-                <% if (loggedIn) { %>
-                <a href="/author/<%= user.username %>" class="transition hover:text-white">My profile</a>
-                <a href="/change-password" class="transition hover:text-white">Change password</a>
-                <a href="/logout" class="transition hover:text-white">Logout</a>
-                <a href="/add-plugin" class="accent-bg inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition">Add plugin</a>
-                <% } else { %>
-                <a href="/login" class="rounded-full border border-white/15 px-4 py-2 text-center text-sm font-semibold text-white transition hover:border-white/40">Login</a>
-                <a href="/register" class="accent-bg inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition">Create account</a>
+            <a href="/add-plugin" class="accent-bg inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold">Add plugin</a>
+            <a href="/author/<%= user.username %>" class="rounded-xl px-3 py-2 text-slate-600 transition hover:bg-white hover:text-slate-900">My profile</a>
+            <a href="/change-password" class="rounded-xl px-3 py-2 text-slate-600 transition hover:bg-white hover:text-slate-900">Change password</a>
+            <a href="/logout" class="rounded-xl px-3 py-2 text-slate-600 transition hover:bg-white hover:text-slate-900">Logout</a>
+            <% if (myPlugins && myPlugins.length > 0) { %>
+            <div class="border-t border-slate-200 pt-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">My plugins</div>
+            <div class="grid gap-2">
+                <% for (var i = 0; i < myPlugins.length; i++) { %>
+                <a href="/plugin/<%= myPlugins[i].software.url %>/<%= myPlugins[i].name %>" class="flex items-center justify-between rounded-lg px-3 py-2 text-slate-600 transition hover:bg-white hover:text-slate-900">
+                    <span class="truncate font-medium text-slate-700"><%= myPlugins[i].name %></span>
+                    <span class="ml-3 text-xs text-slate-400"><%= myPlugins[i].software.name %></span>
+                </a>
                 <% } %>
             </div>
+            <% } %>
         </div>
+        <% } else { %>
+        <div class="flex flex-col gap-3">
+            <a href="/login" class="rounded-full border border-slate-200 bg-white px-4 py-2 text-center text-sm font-semibold text-slate-700 shadow-sm shadow-slate-900/5 transition hover:border-slate-300 hover:text-slate-900">Log in</a>
+            <a href="/register" class="accent-bg inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold">Join the project</a>
+        </div>
+        <% } %>
     </div>
 </header>
 
