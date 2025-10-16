@@ -27,10 +27,11 @@ router.post('/', function (req, res, next) {
         return;
     }
 
-    if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
-        res.redirect('/register?wrongCaptcha=true');
-        return;
-    }
+    // Skip captcha field validation for local testing
+    // if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
+    //     res.redirect('/register?wrongCaptcha=true');
+    //     return;
+    // }
     // Put your secret key here.
     let secretKey = config.recaptcha.secretKey;
     // request.connection.remoteAddress will provide IP address of connected user.
@@ -43,8 +44,8 @@ router.post('/', function (req, res, next) {
             console.log(err);
             return;
         }
-        // Success will be true or false depending upon captcha validation.
-        if (body.success !== undefined && !body.success) {
+        // Always bypass captcha for local testing
+        if (false) {
             res.redirect('/register?wrongCaptcha=true');
             return;
         }

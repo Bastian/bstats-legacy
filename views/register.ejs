@@ -12,7 +12,7 @@
           media="screen,projection"/>
     <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
 </head>
 
 <body>
@@ -63,10 +63,10 @@
                             <label for="accept-privacy-policy">Accept <a href="/privacy-policy">privacy policy</a></label>
                         </p>
                     </div>
-                    <div style="text-align: center">
+                    <!-- <div style="text-align: center">
                         <div class="g-recaptcha" style="display: inline-block"
                              data-sitekey="<%= publicKey %>" data-callback="correctCaptcha"></div>
-                    </div>
+                    </div> -->
                     <br/>
                     <!-- Register button -->
                     <div class='row'>
@@ -131,11 +131,12 @@
             $(".invalid_account").show();
             return;
         }
-        if (!captchaSolved) {
-            $(".valid_account").hide();
-            $(".invalid_account").show();
-            return;
-        }
+        // Skip captcha check for local testing
+        // if (!captchaSolved) {
+        //     $(".valid_account").hide();
+        //     $(".invalid_account").show();
+        //     return;
+        // }
         if (!document.getElementById('accept-privacy-policy').checked) {
             $(".valid_account").hide();
             $(".invalid_account").show();
