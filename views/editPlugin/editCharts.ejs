@@ -1,57 +1,47 @@
 <% if (charts !== undefined && charts.length !== 0) { %>
-<h5 class="<%= customColor1 %>-text col s12 center-align">Edit charts</h5>
-<br><br>
-<ul id="chartsList" class="list-group collection col s12 z-depth-1 grey lighten-4">
-    <%
-    var chartIdsSorted = Object.keys(charts).sort(function(a,b){return charts[a].position-charts[b].position});
-    for (var i = 0; i < chartIdsSorted.length; i++) {
-        var chartId = chartIdsSorted[i];
-    %>
-    <li class="list-group-item collection-item grey lighten-4" id="listElement_<%= chartId %>">
+<section class="mt-12 space-y-4">
+    <div class="flex items-center justify-between">
         <div>
-            <i class="material-icons left glyphicon-move">drag_handle</i><a href="/plugin/<%= softwareUrl %>/<%= plugin.name %>/<%= plugin.id %>/#<%= chartId %>"><b><%= charts[chartId].title %></b> (id: <%= chartId %>)</a>
-            <a href="javascript:showErrorModal('Not supported', 'Editing existing charts is not supported at the moment!')" class="secondary-content">
-                <i class="material-icons" title="Edit chart">build</i>
-            </a>
-            <% if (charts[chartId].isDefault) { %>
-            <a class="secondary-content">
-                <i class="material-icons grey-text" title="Delete chart">delete</i>&nbsp;&nbsp; <!-- Webdesign like a pro -->
-            </a>
-            <% } else { %>
-            <a href="javascript:deleteChart('<%= chartId %>')" class="secondary-content">
-                <i class="material-icons red-text" title="Delete chart">delete</i>&nbsp;&nbsp; <!-- Webdesign like a pro -->
-            </a>
-            <% } %>
+            <h2 class="text-2xl font-semibold text-white">Existing charts</h2>
+            <p class="text-sm text-slate-300">Drag to reorder. Delete removes the chart immediately.</p>
         </div>
-    </li>
-    <% } %>
-</ul>
+    </div>
+    <ul id="chartsList" class="space-y-3">
+        <%
+        var chartIdsSorted = Object.keys(charts).sort(function(a,b){return charts[a].position-charts[b].position});
+        for (var i = 0; i < chartIdsSorted.length; i++) {
+            var chartId = chartIdsSorted[i];
+        %>
+        <li id="listElement_<%= chartId %>" class="rounded-2xl border border-white/10 bg-slate-900/70 p-4 shadow-inner shadow-slate-950/40">
+            <div class="flex items-center justify-between gap-4">
+                <button type="button" class="drag-handle flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4" d="M7 4h6M7 8h6M7 12h6M7 16h6"></path>
+                    </svg>
+                    Drag
+                </button>
+                <div class="text-right text-sm">
+                    <a class="font-semibold text-white hover:underline" href="/plugin/<%= softwareUrl %>/<%= plugin.name %>/<%= plugin.id %>/#<%= chartId %>"><%= charts[chartId].title %></a>
+                    <p class="text-xs text-slate-400">id: <%= chartId %></p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button type="button" class="rounded-full border border-white/15 px-3 py-1 text-xs font-semibold text-slate-400" disabled title="Editing charts is not supported yet">Edit</button>
+                    <% if (charts[chartId].isDefault) { %>
+                    <span class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Default</span>
+                    <% } else { %>
+                    <button type="button" class="rounded-full border border-rose-400/50 bg-rose-500/10 px-3 py-1 text-xs font-semibold text-rose-200 hover:bg-rose-500/20" onclick="deleteChart('<%= chartId %>')">Delete</button>
+                    <% } %>
+                </div>
+            </div>
+        </li>
+        <% } %>
+    </ul>
+</section>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.4.2/Sortable.min.js"></script>
-<script type="application/javascript">
-    function deleteChart(chartId) {
-        // TODO use a modal for the confirmation, because it's fancy
-        if (confirm("Are you sure you want to delete the chart with id " + chartId)) {
-            $.post(window.location.pathname, {
-                action: 'deleteChart',
-                chartId: chartId
-            }).done(function(data) {
-                $('#listElement_' + chartId).remove();
-            }).fail(function(err) {
-                    if (err.responseJSON.error === undefined) {
-                        showErrorModal('Ooops', 'Something happened, which should not happen. Please report this bug.');
-                    } else {
-                        showErrorModal('Error', err.responseJSON.error + '.');
-                    }
-                    console.log(err);
-                }
-            );
-        }
-    }
-
+<script>
     Sortable.create(chartsList, {
         animation: 150,
-        handle: '.glyphicon-move',
+        handle: '.drag-handle',
         onEnd: function (event) {
             if (event.oldIndex === event.newIndex) {
                 return;
@@ -59,7 +49,6 @@
             if (event.oldIndex === undefined || event.newIndex === undefined) {
                 return;
             }
-            console.log('Moved chart from ' + event.oldIndex + ' to ' + event.newIndex);
             $.post(window.location.pathname, {
                 action: 'reorderCharts',
                 oldIndex: event.oldIndex,

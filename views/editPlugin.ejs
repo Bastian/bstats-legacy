@@ -1,84 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8"/>
     <meta name="description" content="Edit your plugin">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>bStats - Edit <%= plugin.name %></title>
 
-    <!-- CSS -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/stylesheets/tailwind.css" rel="stylesheet" media="screen"/>
+    <link href="/stylesheets/style.css" rel="stylesheet" media="screen"/>
 
-    <!-- Scripts (Pls don't punch me, that it's in the head) -->
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-
-    <style type="text/css">
-        .depending_box {
-            display: none;
-        }
-        .blacklistLabel {
-            display: none;
-        }
-        .filterOptions {
-            display: none;
-        }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
+<body class="bg-slate-950 text-slate-100 antialiased">
 
-<body>
 <% include templates/navigation.ejs %>
+
 <main>
     <% if (!(isOwner || (user !== undefined && user.admin))) { %>
-    <% include editPlugin/notOwner.ejs %>
+    <section class="relative isolate overflow-hidden">
+        <div class="absolute inset-0 -z-10 bg-slate-950"></div>
+        <div class="absolute inset-0 -z-10 hero-noise opacity-30"></div>
+        <div class="mx-auto max-w-4xl px-6 py-28 text-center">
+            <h1 class="text-4xl font-semibold text-white sm:text-5xl">Nice try!</h1>
+            <p class="mt-6 text-sm leading-6 text-slate-300">Only the owner (or an admin) can edit <span class="font-semibold text-white"><%= plugin.name %></span>.</p>
+        </div>
+    </section>
     <% } else { %>
-    <br><br>
-    <div class="container row">
-        <% include editPlugin/addChart.ejs %>
-        <% include editPlugin/editCharts.ejs %>
-        <% include editPlugin/deletePlugin.ejs %>
-        <% if (user.admin) { %>
-        <% include editPlugin/transferOwnership.ejs %>
-        <% } %>
-    </div>
+    <section class="relative isolate overflow-hidden">
+        <div class="absolute inset-0 -z-20 bg-slate-950"></div>
+        <div class="absolute inset-0 -z-10 hero-noise opacity-30"></div>
+        <div class="mx-auto max-w-5xl px-6 py-24 sm:py-28">
+            <header class="space-y-4">
+                <span class="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">Plugin settings</span>
+                <h1 class="text-4xl font-semibold text-white sm:text-5xl"><%= plugin.name %></h1>
+                <p class="text-sm leading-6 text-slate-300">Manage charts, reorder them or tidy things up. Changes apply instantly to your public dashboard.</p>
+            </header>
+
+            <div id="edit-notice" class="mt-8 hidden rounded-2xl border border-white/15 bg-white/10 p-4 text-sm leading-6">
+                <div class="flex items-start gap-3">
+                    <div id="edit-notice-icon" class="mt-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400"></div>
+                    <div>
+                        <p id="edit-notice-title" class="font-semibold text-white"></p>
+                        <p id="edit-notice-text" class="text-slate-200"></p>
+                    </div>
+                </div>
+                <button type="button" id="edit-notice-dismiss" class="mt-3 text-xs font-semibold text-slate-400 hover:text-slate-200">Dismiss</button>
+            </div>
+
+            <section class="mt-12 space-y-6 rounded-3xl border border-white/10 bg-slate-900/75 p-8 shadow-2xl shadow-slate-950/60 backdrop-blur">
+                <header class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 class="text-2xl font-semibold text-white">Add a custom chart</h2>
+                        <p class="text-sm text-slate-300">Pick a chart type and fill in the few details we need. Need ideas? <a href="/help/custom-charts" class="accent-text hover:opacity-80">Custom chart guide</a>.</p>
+                    </div>
+                    <div class="w-full max-w-xs">
+                        <label for="select_chart" class="block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Chart type</label>
+                        <select id="select_chart" class="input-shell focus-accent mt-2 w-full text-sm">
+                            <option value="" selected disabled>Select chart type</option>
+                            <optgroup label="Pie charts">
+                                <option value="simple_pie">Simple pie</option>
+                                <option value="advanced_pie">Advanced pie</option>
+                                <option value="drilldown_pie">Drilldown pie</option>
+                            </optgroup>
+                            <optgroup label="Line charts">
+                                <option value="single_linechart">Single line chart</option>
+                                <option value="multi_linechart" disabled>Multi line chart (coming soon)</option>
+                            </optgroup>
+                            <optgroup label="Bar charts">
+                                <option value="simple_bar" disabled>Simple bar chart (coming soon)</option>
+                                <option value="advanced_bar" disabled>Advanced bar chart (coming soon)</option>
+                            </optgroup>
+                            <optgroup label="Miscellaneous">
+                                <option value="mapchart" disabled>Map chart (not available)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </header>
+
+                <div class="space-y-6">
+                    <% include editPlugin/forms/simplePieForm.ejs %>
+                    <% include editPlugin/forms/advancedPieForm.ejs %>
+                    <% include editPlugin/forms/drilldownPieForm.ejs %>
+                    <% include editPlugin/forms/singleLineChartForm.ejs %>
+
+                    <div class="depending_box simple_bar advanced_bar multi_linechart mapchart hidden rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-slate-300">
+                        <h3 class="text-lg font-semibold text-white">Not available yet</h3>
+                        <p class="mt-2">This chart type hasn’t made it back into the editor yet. Keep an eye on the issue tracker for updates.</p>
+                    </div>
+                </div>
+            </section>
+
+            <% include editPlugin/editCharts.ejs %>
+
+            <section class="mt-12 rounded-3xl border border-rose-500/30 bg-rose-500/10 p-8 shadow-2xl shadow-rose-900/20">
+                <h2 class="text-2xl font-semibold text-white">Danger zone</h2>
+                <p class="mt-3 text-sm text-rose-100">Deleting a plugin removes all charts and collected data. This can’t be undone.</p>
+                <% include editPlugin/deletePlugin.ejs %>
+            </section>
+
+            <% if (user.admin) { %>
+            <section class="mt-12 rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-2xl shadow-slate-950/50 backdrop-blur">
+                <h2 class="text-2xl font-semibold text-white">Transfer ownership</h2>
+                <p class="mt-3 text-sm text-slate-300">Admins can hand this plugin over to another account. The new owner can edit charts immediately.</p>
+                <% include editPlugin/transferOwnership.ejs %>
+            </section>
+            <% } %>
+        </div>
+    </section>
     <% } %>
 </main>
 
-<!-- Error modal -->
-<div id="errorModal" class="modal">
-    <div class="modal-content">
-        <h4 class="red-text" id="errorModalTitle"></h4>
-        <p id="errorModalText"></p>
-    </div>
-    <div class="modal-footer">
-        <b><a href="#" class="modal-action modal-close waves-effect waves-red btn-flat grey-text">Ok</a></b>
-    </div>
-</div>
-
 <% include templates/footer.ejs %>
 
-<!-- Scripts -->
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.4.2/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+    (function() {
+        var notice = document.getElementById('edit-notice');
+        var noticeTitle = document.getElementById('edit-notice-title');
+        var noticeText = document.getElementById('edit-notice-text');
+        var noticeIcon = document.getElementById('edit-notice-icon');
+        var dismiss = document.getElementById('edit-notice-dismiss');
 
-<script type="application/javascript">
-    $(document).ready(function() {
-        $('select').material_select();
-    });
+        if (dismiss) {
+            dismiss.addEventListener('click', function() {
+                notice.classList.add('hidden');
+            });
+        }
 
-    $('.chips').material_chip({
-        placeholder: 'Add an other value',
-        secondaryPlaceholder: 'Add entry'
-    });
+        window.showNotice = function(type, title, message) {
+            if (!notice) {
+                return;
+            }
+            var color = type === 'error' ? '#f87171' : '#34d399';
+            noticeIcon.style.backgroundColor = color;
+            noticeTitle.textContent = title;
+            noticeText.textContent = message;
+            notice.classList.remove('hidden');
+        };
 
-    function showErrorModal(title, text) {
-        $('#errorModalTitle').text(title);
-        $('#errorModalText').text(text);
-        $('#errorModal').modal('open');
-    }
+        function toggleFilterOptions(wrapper, checkbox) {
+            if (!wrapper) return;
+            var filterOptions = wrapper.querySelector('.filterOptions');
+            if (filterOptions) {
+                filterOptions.classList.toggle('hidden', !checkbox.checked);
+            }
+        }
+
+        $(document).on('change', '.checkboxFilter', function() {
+            var wrapper = this.closest('.depending_box');
+            toggleFilterOptions(wrapper, this);
+        });
+
+        $(document).on('change', '.checkboxBlacklist', function() {
+            var wrapper = this.closest('.depending_box');
+            if (!wrapper) return;
+            var whitelistLabel = wrapper.querySelector('.whitelistLabel');
+            var blacklistLabel = wrapper.querySelector('.blacklistLabel');
+            if (whitelistLabel) whitelistLabel.classList.toggle('hidden', this.checked);
+            if (blacklistLabel) blacklistLabel.classList.toggle('hidden', !this.checked);
+        });
+
+        $("#select_chart").on("change", function() {
+            var selectedVal = this.value;
+            document.querySelectorAll('.depending_box').forEach(function(box) {
+                box.classList.add('hidden');
+            });
+            document.querySelectorAll('.depending_box.' + selectedVal).forEach(function(box) {
+                box.classList.remove('hidden');
+            });
+        });
+
+        window.addChart = function(chartData) {
+            chartData.action = 'addChart';
+            $.post(window.location.href, chartData)
+                .done(function() {
+                    showNotice('success', 'Chart created', '“' + chartData.chartTitle + '” is now live on your plugin page.');
+                }).fail(function(err) {
+                    var message = 'Something happened, which should not happen. Please report this bug.';
+                    if (err.responseJSON && err.responseJSON.error) {
+                        message = err.responseJSON.error + '.';
+                    }
+                    showNotice('error', 'Error', message);
+                });
+        };
+
+        window.deleteChart = function(chartId) {
+            if (!confirm('Delete chart ' + chartId + '?')) {
+                return;
+            }
+            $.post(window.location.pathname, {
+                action: 'deleteChart',
+                chartId: chartId
+            }).done(function() {
+                $('#listElement_' + chartId).remove();
+                showNotice('success', 'Chart removed', 'The chart has been deleted.');
+            }).fail(function(err) {
+                var message = 'Something happened, which should not happen. Please report this bug.';
+                if (err.responseJSON && err.responseJSON.error) {
+                    message = err.responseJSON.error + '.';
+                }
+                showNotice('error', 'Error', message);
+            });
+        };
+
+        window.deletePlugin = function() {
+            $.post(window.location.href, {action: 'deletePlugin'})
+                .done(function() {
+                    window.location.href = '/';
+                }).fail(function(err) {
+                    var message = 'Something happened, which should not happen. Please report this bug.';
+                    if (err.responseJSON && err.responseJSON.error) {
+                        message = err.responseJSON.error + '.';
+                    }
+                    showNotice('error', 'Error', message);
+                });
+        };
+
+        window.transferOwnership = function(newOwnerName) {
+            $.post(window.location.href, {
+                action: 'transferOwnership',
+                newOwner: newOwnerName
+            }).done(function() {
+                showNotice('success', 'Ownership transferred', newOwnerName + ' can now manage this plugin.');
+            }).fail(function(err) {
+                var message = 'Something happened, which should not happen. Please report this bug.';
+                if (err.responseJSON && err.responseJSON.error) {
+                    message = err.responseJSON.error + '.';
+                }
+                showNotice('error', 'Error', message);
+            });
+        };
+    })();
 </script>
 
 <% include templates/globalScripts.ejs %>

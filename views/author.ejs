@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <!-- Twitter stuff -->
     <meta name="twitter:card" content="summary" />
@@ -8,73 +8,106 @@
     <meta name="twitter:description" content="Statistics about <%= username %>!" />
     <meta name="twitter:image" content="https://bstats.org/images/Twitter.jpg" />
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="description" content="bStats collects data for plugin authors. It's free and easy to use!">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-    <title>bStats - <% username %></title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Plugins published by <%= username %> on bStats.">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>bStats - <%= username %></title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <link href="/stylesheets/dataTablesMaterialDesign.css" type="text/css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/stylesheets/tailwind.css" rel="stylesheet" media="screen"/>
+    <link href="/stylesheets/style.css" rel="stylesheet" media="screen"/>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 antialiased">
 
 <% include templates/navigation.ejs %>
+
 <main>
-    <div class="section no-pad-bot" id="index-banner">
-        <div class="container">
-            <br><br>
-            <h1 class="header center <%= customColor1 %>-text truncate"><%= username %></h1>
-            <div class="row center">
-                <h5 class="header col s12 light">Here are all the plugins created by <%= username %></h5>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <br><br>
-        <div class="row">
-            <div id="admin" class="col s12">
-                <div class="card material-table">
-                    <div style="overflow-x:auto;">
-                        <div style="min-width: 650px">
-                            <table id="pluginList">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Software</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                  <% for (var i = 0; i < plugins.length; i++) { %>
-                                      <tr>
-                                          <td><a href="/plugin/<%= plugins[i].software.url %>/<%= plugins[i].name %>/<%= plugins[i].id %>"><%= plugins[i].name %></a></td>
-                                          <% if (plugins[i].software.globalPlugin !== null) { %>
-                                          <td><a href="/global/<%= plugins[i].software.url %>"><%= plugins[i].software.name %></a></td>
-                                          <% } else { %>
-                                          <td><%= plugins[i].software.name %></td>
-                                          <% } %>
-                                      </tr>
-                                  <% } %>
-                                </tbody>
-                            </table>
-                        </div>
+    <section class="relative isolate overflow-hidden">
+        <div class="absolute inset-0 -z-20 bg-slate-950"></div>
+        <div class="absolute inset-0 -z-10 hero-noise"></div>
+        <div class="mx-auto max-w-5xl px-6 py-24 sm:py-28">
+            <header class="space-y-6 text-center">
+                <span class="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">Plugin author</span>
+                <h1 class="text-4xl font-semibold text-white sm:text-5xl"><%= username %></h1>
+                <p class="text-sm leading-6 text-slate-300">All plugins maintained by <%= username %>. Click any entry to dive into its metrics.</p>
+            </header>
+
+            <div class="mt-12 space-y-4 rounded-3xl border border-white/10 bg-slate-900/75 p-8 shadow-2xl shadow-slate-950/60 backdrop-blur">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 class="text-lg font-semibold text-white">Plugins</h2>
+                        <p class="text-xs text-slate-400"><%= plugins.length %> plugin<%= plugins.length === 1 ? '' : 's' %> reporting to bStats</p>
                     </div>
+                    <div class="w-full max-w-xs">
+                        <label for="author-search" class="block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Filter</label>
+                        <input id="author-search" type="search" placeholder="Search by plugin or platform" class="input-shell focus-accent mt-2 w-full text-sm" />
+                    </div>
+                </div>
+
+                <div class="overflow-hidden rounded-2xl border border-white/10">
+                    <table class="min-w-full divide-y divide-white/10 text-sm text-left">
+                        <thead class="bg-white/5 uppercase text-xs tracking-[0.3em] text-slate-400">
+                        <tr>
+                            <th class="px-4 py-3 font-semibold">Plugin</th>
+                            <th class="px-4 py-3 font-semibold">Platform</th>
+                        </tr>
+                        </thead>
+                        <tbody id="author-table-body" class="divide-y divide-white/10 text-slate-200">
+                        <% if (plugins.length === 0) { %>
+                        <tr>
+                            <td colspan="2" class="px-4 py-6 text-center text-sm text-slate-400">No plugins found.</td>
+                        </tr>
+                        <% } else { %>
+                        <% for (var i = 0; i < plugins.length; i++) { %>
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="px-4 py-3 font-semibold text-white">
+                                <a class="hover:underline" href="/plugin/<%= plugins[i].software.url %>/<%= plugins[i].name %>/<%= plugins[i].id %>"><%= plugins[i].name %></a>
+                            </td>
+                            <td class="px-4 py-3 text-slate-300">
+                                <% if (plugins[i].software.globalPlugin !== null) { %>
+                                <a class="hover:underline" href="/global/<%= plugins[i].software.url %>"><%= plugins[i].software.name %></a>
+                                <% } else { %>
+                                <%= plugins[i].software.name %>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% } %>
+                        <% } %>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
 
-<!--  Scripts-->
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="/javascripts/dataTablesMaterialDesign.js"></script>
+<script>
+    (function() {
+        var searchInput = document.getElementById('author-search');
+        var tableBody = document.getElementById('author-table-body');
+        if (!searchInput || !tableBody) {
+            return;
+        }
+        var rows = Array.prototype.slice.call(tableBody.querySelectorAll('tr'));
+        searchInput.addEventListener('input', function() {
+            var term = searchInput.value.trim().toLowerCase();
+            rows.forEach(function(row) {
+                if (row.dataset.empty === 'true') {
+                    return;
+                }
+                var text = row.textContent.toLowerCase();
+                row.style.display = term.length === 0 || text.indexOf(term) !== -1 ? '' : 'none';
+            });
+        });
+        if (rows.length && rows[0].children.length === 1) {
+            rows[0].dataset.empty = 'true';
+        }
+    })();
+</script>
 
 <% include templates/globalScripts.ejs %>
 

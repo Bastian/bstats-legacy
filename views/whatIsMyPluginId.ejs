@@ -1,69 +1,77 @@
 <!DOCTYPE html>
-<html lang="en" style="overflow-x: hidden">
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="description" content="A list with the plugin ids of all your plugins.">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <meta charset="utf-8"/>
+    <meta name="description" content="See the plugin IDs for every plugin you registered.">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>bStats - What is my plugin id?</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <link href="/stylesheets/dataTablesMaterialDesign.css" type="text/css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/stylesheets/tailwind.css" rel="stylesheet" media="screen"/>
+    <link href="/stylesheets/style.css" rel="stylesheet" media="screen"/>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 antialiased">
 
 <% include templates/navigation.ejs %>
-<main>
-    <div class="container">
-        <br><br>
-        <% if (!loggedIn) { %>
-            <h5 class="<%= customColor1 %>-text col s12 center-align">Please login first!</h5>
-            <img src="/images/i-need-you-to-login.jpg" alt="I need you to login!" style="max-width: 90%; min-width: 50%; margin: 0 auto; display: block;">
-        <% } else if (myPlugins.length <= 0) { %>
-            <h3 class="<%= customColor1 %>-text col s12 center-align">You don't have any plugins!</h3>
-            <div class="row center">
-                <h5 class="header col s12 light authorbox">Here's a random cat image instead:</h5>
-            </div>
-            <img src="https://cataas.com/cat?<%= Math.random() %>" alt="Moew!" style="max-width: 90%; min-width: 50%; margin: 0 auto; display: block;">
-        <% } else { %>
-            <h5 class="<%= customColor1 %>-text col s12 center-align">Your plugin ids:</h5>
 
-            <div class="card material-table">
-                <div style="overflow-x:auto;">
-                    <div style="min-width: 650px">
-                        <table id="plugin-ids-list">
-                            <thead>
-                            <tr>
-                                <th>Plugin</th>
-                                <th>Software</th>
-                                <th>Plugin Id</th>
-                            </tr>
-                            </thead>
-                            <% for (var i = 0; i < myPlugins.length; i++) { %>
-                                <tr>
-                                    <td><%= myPlugins[i].name %></td>
-                                    <td><%= myPlugins[i].software.name %></td>
-                                    <td><b><%= myPlugins[i].id %></b></td>
-                                </tr>
-                            <% } %>
-                        </table>
-                    </div>
+<main>
+    <section class="relative isolate overflow-hidden">
+        <div class="absolute inset-0 -z-20 bg-slate-950"></div>
+        <div class="absolute inset-0 -z-10 hero-noise opacity-30"></div>
+        <div class="mx-auto max-w-3xl px-6 py-24 sm:py-28 text-center">
+            <% if (!loggedIn) { %>
+            <span class="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">Hold up</span>
+            <h1 class="mt-4 text-4xl font-semibold text-white sm:text-5xl">You need to log in first</h1>
+            <p class="mt-6 text-sm leading-6 text-slate-300">Your plugin IDs are tied to your account. Log in to see them.</p>
+            <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+                <a href="/login" class="accent-bg inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold shadow-lg shadow-slate-950/40 transition hover:shadow-xl">Log in</a>
+                <a href="/register" class="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-white/80 transition hover:border-white/35 hover:text-white">Create account</a>
+            </div>
+            <% } else if (myPlugins.length <= 0) { %>
+            <span class="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">Heads up</span>
+            <h1 class="mt-4 text-4xl font-semibold text-white sm:text-5xl">You don’t have any plugins yet</h1>
+            <p class="mt-6 text-sm leading-6 text-slate-300">Add a plugin first, then come back here. In the meantime, enjoy this random cat:</p>
+            <img src="https://cataas.com/cat?<%= Math.random() %>" alt="Random cat" class="mx-auto mt-8 w-full max-w-md rounded-3xl border border-white/10 bg-white/5 shadow-2xl shadow-slate-950/40" />
+            <div class="mt-8">
+                <a href="/add-plugin" class="accent-bg inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold shadow-lg shadow-slate-950/40 transition hover:shadow-xl">Add your first plugin</a>
+            </div>
+            <% } else { %>
+            <span class="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">Plugin IDs</span>
+            <h1 class="mt-4 text-4xl font-semibold text-white sm:text-5xl">Your registered plugins</h1>
+            <p class="mt-6 text-sm leading-6 text-slate-300">Copy the ID that corresponds to the plugin you’re wiring into bStats. The ID slot in the Metrics class constructor needs it.</p>
+
+            <div class="mt-12 space-y-4 rounded-3xl border border-white/10 bg-slate-900/75 p-6 shadow-2xl shadow-slate-950/60 backdrop-blur">
+                <div class="overflow-hidden rounded-2xl border border-white/10">
+                    <table class="min-w-full divide-y divide-white/10 text-left text-sm">
+                        <thead class="bg-white/5 uppercase text-xs tracking-[0.3em] text-slate-400">
+                        <tr>
+                            <th class="px-4 py-3 font-semibold">Plugin</th>
+                            <th class="px-4 py-3 font-semibold">Software</th>
+                            <th class="px-4 py-3 font-semibold">Plugin ID</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/10 text-slate-200">
+                        <% for (var i = 0; i < myPlugins.length; i++) { %>
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="px-4 py-3 font-semibold text-white"><%= myPlugins[i].name %></td>
+                            <td class="px-4 py-3 text-slate-300"><%= myPlugins[i].software.name %></td>
+                            <td class="px-4 py-3 text-emerald-200">
+                                <code class="rounded bg-emerald-500/10 px-2 py-1 text-sm font-semibold text-emerald-200"><%= myPlugins[i].id %></code>
+                            </td>
+                        </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        <% } %>
-        <br><br>
-    </div>
+            <% } %>
+        </div>
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
-
-<!--  Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-
 <% include templates/globalScripts.ejs %>
 
 </body>

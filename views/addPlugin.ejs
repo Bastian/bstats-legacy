@@ -1,102 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8"/>
     <meta name="description" content="Add a plugin to bStats.">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>bStats - Add plugin</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-
-    <!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
-
-    <style>
-        body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-
-        main {
-            flex: 1 0 auto;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/stylesheets/tailwind.css" rel="stylesheet" media="screen"/>
+    <link href="/stylesheets/style.css" rel="stylesheet" media="screen"/>
 </head>
-
-<body>
+<body class="bg-slate-950 text-slate-100 antialiased">
 
 <% include templates/navigation.ejs %>
+
 <main>
-    <div class="container">
-        <br><br>
-        <div class="hide-on-med-and-down"><br><br></div>
-        <div class="row">
+    <section class="relative isolate overflow-hidden">
+        <div class="absolute inset-0 -z-20 bg-slate-950"></div>
+        <div class="absolute inset-0 -z-10 hero-noise opacity-30"></div>
+        <div class="mx-auto max-w-3xl px-6 py-24 sm:py-28">
+            <header class="space-y-6 text-center">
+                <span class="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">Add plugin</span>
+                <h1 class="text-4xl font-semibold text-white sm:text-5xl">Register your plugin with bStats</h1>
+                <p class="text-sm leading-6 text-slate-300">We just need to know which server software you target and what the plugin is called. You’ll get your plugin ID right after submitting.</p>
+            </header>
+
             <% if (failed) { %>
-            <h5 class="red-text col s12 center-align">Something went wrong on our side :(</h5>
+            <div class="mt-8 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-100">Something went wrong on our side. Please try again or ping us on Discord if the problem persists.</div>
             <% } else if (alreadyAdded) { %>
-            <h5 class="red-text col s12 center-align">Plugin already added!</h5>
+            <div class="mt-8 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-100">Looks like this plugin is already registered.</div>
             <% } else if (wrongCaptcha) { %>
-            <h5 class="red-text col s12 center-align">Please solve the captcha!</h5>
-            <% } else { %>
-            <h5 class="<%= customColor1 %>-text col s12 center-align">Add plugin</h5>
+            <div class="mt-8 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-100">Please solve the captcha before submitting.</div>
             <% } %>
-            <br><br>
-            <div class="col s12 m8 l6 offset-m2 offset-l3 z-depth-1 grey lighten-4 row">
-                <form class="col s12" method="post">
-                    <br>
-                    <div class="row">
-                        <!-- Server software -->
-                        <div class="input-field col s12">
-                            <select id="software" name="software">
-                                <option value="" disabled selected>Select software</option>
-                                <% for (var i = 0; i < allSoftware.length; i++) { %>
-                                <% if (allSoftware[i].globalPlugin || (user != null && user.admin)) { %>
-                                <option value="<%= allSoftware[i].id %>"><%= allSoftware[i].name %></option>
-                                <% } %>
-                                <% } %>
-                            </select>
-                            <label>Select server software</label>
-                        </div>
-                        <!-- Name -->
-                        <div class="input-field col s12">
-                            <input id="pluginName" type="text" name="pluginName"
-                                   pattern="^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$" length="32" class="validate">
-                            <label for="pluginName" data-error="Invalid plugin name">Plugin name</label>
-                        </div>
-                    </div>
-                    <!-- <div style="text-align: center">
-                        <div class="g-recaptcha" style="display: inline-block"
-                             data-sitekey="<%= publicKey %>"></div>
-                    </div> -->
-                    <br/>
-                    <!-- Add plugin button -->
-                    <div class='row'>
-                        <button type='submit' name='btn_add_plugin' class='col s12 btn btn-large waves-effect <%= customColor1 %>'>
-                            Add plugin
-                        </button>
-                    </div>
-                </form>
-            </div>
+
+            <form method="post" class="mt-10 space-y-6 rounded-3xl border border-white/10 bg-slate-900/75 p-8 shadow-2xl shadow-slate-950/60 backdrop-blur">
+                <div class="space-y-3">
+                    <label for="software" class="block text-sm font-medium text-slate-200">Server software</label>
+                    <select id="software" name="software" required class="input-shell focus-accent w-full text-sm">
+                        <option value="" disabled selected>Select server software</option>
+                        <% for (var i = 0; i < allSoftware.length; i++) { %>
+                        <% if (allSoftware[i].globalPlugin || (user != null && user.admin)) { %>
+                        <option value="<%= allSoftware[i].id %>"><%= allSoftware[i].name %></option>
+                        <% } %>
+                        <% } %>
+                    </select>
+                    <p class="text-xs text-slate-400">Only platforms with global dashboards appear here by default. Admins can add hidden ones too.</p>
+                </div>
+
+                <div class="space-y-3">
+                    <label for="pluginName" class="block text-sm font-medium text-slate-200">Plugin name</label>
+                    <input id="pluginName" name="pluginName" type="text" maxlength="32" pattern="^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$" required class="input-shell focus-accent w-full text-sm" placeholder="AwesomePlugin" />
+                    <p class="text-xs text-slate-400">Letters, numbers, spaces, dashes and underscores are fine.</p>
+                </div>
+
+                <button type="submit" name="btn_add_plugin" class="accent-bg w-full rounded-full px-6 py-3 text-sm font-semibold shadow-lg shadow-slate-950/40 transition hover:shadow-xl">Add plugin</button>
+            </form>
+
+            <p class="mt-6 text-center text-xs text-slate-400">After registering, you’ll get the plugin ID you need for the Metrics class. Need help? <a href="/getting-started" class="accent-text hover:opacity-80">Read the getting started guide</a>.</p>
         </div>
-    </div>
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
-
-<!-- Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-
-<script type="application/javascript">
-    $(document).ready(function() {
-        $('select').material_select();
-    });
-</script>
-
 <% include templates/globalScripts.ejs %>
 
 </body>

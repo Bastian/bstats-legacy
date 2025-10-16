@@ -1,71 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8"/>
     <meta name="description" content="Login into your bStats account.">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>bStats - Login</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/stylesheets/tailwind.css" rel="stylesheet" media="screen"/>
+    <link href="/stylesheets/style.css" rel="stylesheet" media="screen"/>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 antialiased">
 
 <% include templates/navigation.ejs %>
-<main>
-    <div class="container">
-        <br><br>
-        <div class="hide-on-med-and-down"><br><br></div>
-        <div class="row">
-            <% if (failed) { %>
-            <h5 class="red-text col s12 center-align">Login failed! Please try again!</h5>
-            <% } else if (registered) { %>
-            <h5 class="<%= customColor1 %>-text col s12 center-align">Account created! Please log in now.</h5>
-            <% } else { %>
-            <h5 class="<%= customColor1 %>-text col s12 center-align">Please, login into your account</h5>
-            <% } %>
-            <br><br>
-            <div class="col s12 m8 l6 offset-m2 offset-l3 z-depth-1 grey lighten-4 row">
-                <form class="col s12" method="post">
-                    <br>
-                    <!-- Name form -->
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="username" type="text" name="username">
-                            <label for="username">Name</label>
-                        </div>
-                    </div>
-                    <!-- Password form -->
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="password" type="password" name="password">
-                            <label for="password">Password</label>
-                        </div>
-                    </div>
-                    <br/>
-                    <!-- Login button -->
-                    <div class='row'>
-                        <button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect <%= customColor1 %>'>
-                            Login
-                        </button>
-                    </div>
-                </form>
-            </div>
 
-            <a href="/register"class="col s12 center-align">Create account</a>
+<main class="flex flex-col">
+    <section class="relative flex flex-1 items-center justify-center px-6 py-16 sm:py-24">
+        <div class="absolute inset-0 -z-10 bg-slate-950"></div>
+        <div class="absolute inset-0 -z-10 hero-noise opacity-30"></div>
+
+        <div class="w-full max-w-md space-y-8">
+            <header class="space-y-3 text-center">
+                <h1 class="text-3xl font-semibold text-white">Welcome back</h1>
+                <% if (failed) { %>
+                <p class="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm text-red-200">Login failed. Double-check your username and password.</p>
+                <% } else if (registered) { %>
+                <p class="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-100">Account created! Sign in to start managing your plugins.</p>
+                <% } else { %>
+                <p class="text-sm leading-6 text-slate-300">Sign in with the account you use to manage plugins on bStats. No account? <a href="/register" class="accent-text hover:opacity-80">Create one here</a>.</p>
+                <% } %>
+            </header>
+
+            <form method="post" class="rounded-3xl border border-white/10 bg-slate-900/75 p-8 shadow-2xl shadow-slate-950/60 backdrop-blur">
+                <div class="space-y-5">
+                    <label for="username" class="block text-sm font-medium text-slate-200">Username</label>
+                    <input id="username" name="username" type="text" autocomplete="username" required class="input-shell focus-accent w-full" placeholder="Notch" />
+                </div>
+                <div class="mt-6 space-y-5">
+                    <label for="password" class="block text-sm font-medium text-slate-200">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required class="input-shell focus-accent w-full" placeholder="••••••••" />
+                </div>
+                <button type="submit" name="btn_login" class="accent-bg mt-8 w-full rounded-full px-6 py-3 text-sm font-semibold shadow-lg shadow-slate-950/40 transition hover:shadow-xl">
+                    Log in
+                </button>
+            </form>
+
+            <p class="text-center text-sm text-slate-400">
+                Need access? <a href="/register" class="accent-text hover:opacity-80">Create a free account</a>.
+            </p>
         </div>
-    </div>
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
-
-<!-- Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-
 <% include templates/globalScripts.ejs %>
 
 </body>

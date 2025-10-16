@@ -1,91 +1,190 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="description" content="bStats collects data for plugin authors. It's free and easy to use!">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Browse plugins reporting metrics to bStats.">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>bStats - Plugin list</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <link href="/stylesheets/dataTablesMaterialDesign.css" type="text/css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/stylesheets/tailwind.css" rel="stylesheet" media="screen"/>
+    <link href="/stylesheets/style.css" rel="stylesheet" media="screen"/>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 antialiased">
 
 <% include templates/navigation.ejs %>
+
 <main>
-    <div class="container">
-        <br><br>
-        <!-- Search form -->
-        <div class="input-field">
-            <i class="material-icons prefix grey-text text-darken-2" style="margin-top: 10px">search</i>
-            <input id="searchTable" type="text">
-            <label for="searchTable">Search plugins</label>
-        </div>
-        <!-- Datatables design by Azamat Mukhiddinov (http://codepen.io/azamatms/pen/ZGwOMM/) -->
-        <div class="row">
-            <div id="admin" class="col s12">
-                <div class="card material-table">
-                    <div class="table-header">
-                        <span class="table-title">Plugin List</span>
+    <section class="relative isolate overflow-hidden">
+        <div class="absolute inset-0 -z-20 bg-slate-950"></div>
+        <div class="absolute inset-0 -z-10 hero-noise"></div>
+        <div class="mx-auto max-w-5xl px-6 py-24 sm:py-28">
+            <header class="space-y-6 text-center">
+                <span class="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">Live directory</span>
+                <h1 class="text-4xl font-semibold text-white sm:text-5xl">Plugins reporting to bStats</h1>
+                <p class="text-sm leading-6 text-slate-300">This list updates automatically as plugins send data. Search by name, owner or platform. Sort by whatever matters to you.</p>
+            </header>
+
+            <div class="mt-12 space-y-6">
+                <div class="flex flex-col gap-4 rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-xl shadow-slate-950/40 backdrop-blur md:flex-row md:items-center md:justify-between">
+                    <div class="w-full md:max-w-sm">
+                        <label for="plugin-search" class="block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Search plugins</label>
+                        <input id="plugin-search" type="search" placeholder="Search by plugin, owner or platform..." class="input-shell focus-accent mt-2 w-full text-sm" />
                     </div>
-                    <div style="overflow-x:auto;">
-                        <div style="min-width: 650px">
-                            <table id="pluginList">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Software</th>
-                                    <th>Owner</th>
-                                    <th>Servers</th>
-                                    <th>Players</th>
-                                </tr>
-                                </thead>
-                            </table>
-                        </div>
+                    <div class="flex gap-3 text-xs text-slate-400">
+                        <button id="sort-servers" type="button" class="rounded-full border border-white/15 px-4 py-2 font-semibold text-white/80 transition hover:border-white/40 hover:text-white">Sort by servers</button>
+                        <button id="sort-players" type="button" class="rounded-full border border-white/15 px-4 py-2 font-semibold text-white/80 transition hover:border-white/40 hover:text-white">Sort by players</button>
                     </div>
                 </div>
+
+                <div class="overflow-hidden rounded-3xl border border-white/10 bg-slate-900/70 shadow-2xl shadow-slate-950/40 backdrop-blur">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-white/10 text-left text-sm">
+                            <thead class="bg-white/5 text-xs uppercase tracking-[0.3em] text-slate-400">
+                            <tr>
+                                <th class="px-4 py-3 font-semibold">Plugin</th>
+                                <th class="px-4 py-3 font-semibold">Platform</th>
+                                <th class="px-4 py-3 font-semibold">Owner</th>
+                                <th class="px-4 py-3 font-semibold text-right">Servers</th>
+                                <th class="px-4 py-3 font-semibold text-right">Players</th>
+                            </tr>
+                            </thead>
+                            <tbody id="plugin-table-body" class="divide-y divide-white/5 text-slate-200">
+                            <tr id="plugin-loading-row">
+                                <td colspan="5" class="px-4 py-8 text-center text-sm text-slate-400">Loading plugins…</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <p id="plugin-meta" class="text-xs text-slate-500"></p>
             </div>
         </div>
-    </div>
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
 
-<!--  Scripts-->
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="/javascripts/dataTablesMaterialDesign.js"></script>
+<script>
+(function() {
+    var searchInput = document.getElementById('plugin-search');
+    var tableBody = document.getElementById('plugin-table-body');
+    var loadingRow = document.getElementById('plugin-loading-row');
+    var meta = document.getElementById('plugin-meta');
+    var sortServersButton = document.getElementById('sort-servers');
+    var sortPlayersButton = document.getElementById('sort-players');
 
-<script type="application/javascript">
+    var plugins = [];
+    var searchTerm = '';
+    var sortBy = 'servers';
 
-    $(document).on('input','#searchTable',function () {
-        var table = $('#pluginList').DataTable();
-        table.search(document.getElementById('searchTable').value).draw();
-    });
+    function formatNumber(value) {
+        if (typeof value !== 'number') {
+            value = Number(value) || 0;
+        }
+        return value.toLocaleString();
+    }
 
-    $(document).ready(function() {
-        $('#pluginList').DataTable( {
-            processing: true,
-            ajax: {
-                url: '/api/v1/datatable',
-                dataSrc: '',
-                cache: true
-            },
-            columns: [
-                { data: 'name' },
-                { data: 'softwareName' },
-                { data: 'ownerName' },
-                { data: 'servers' },
-                { data: 'players' }
-            ],
-            order: [[3, 'desc']]
-        } );
-    } );
+    function renderTable() {
+        if (!plugins.length) {
+            return;
+        }
+
+        var filtered = plugins.filter(function(item) {
+            if (!searchTerm) {
+                return true;
+            }
+            var term = searchTerm.toLowerCase();
+            return (
+                item.nameText.includes(term) ||
+                item.ownerText.includes(term) ||
+                item.softwareText.includes(term)
+            );
+        });
+
+        filtered.sort(function(a, b) {
+            var field = sortBy === 'players' ? 'players' : 'servers';
+            return (Number(b[field]) || 0) - (Number(a[field]) || 0);
+        });
+
+        tableBody.innerHTML = '';
+        if (!filtered.length) {
+            var emptyRow = document.createElement('tr');
+            emptyRow.innerHTML = '<td colspan="5" class="px-4 py-8 text-center text-sm text-slate-400">No plugins matched your search.</td>';
+            tableBody.appendChild(emptyRow);
+        } else {
+            filtered.forEach(function(item) {
+                var row = document.createElement('tr');
+                row.className = 'hover:bg-white/5 transition';
+                row.innerHTML = [
+                    '<td class="px-4 py-3 font-semibold text-white">' + item.nameHtml + '</td>',
+                    '<td class="px-4 py-3 text-slate-300">' + item.softwareHtml + '</td>',
+                    '<td class="px-4 py-3 text-slate-300">' + item.ownerHtml + '</td>',
+                    '<td class="px-4 py-3 text-right font-semibold text-white">' + formatNumber(item.servers) + '</td>',
+                    '<td class="px-4 py-3 text-right font-semibold text-white">' + formatNumber(item.players) + '</td>'
+                ].join('');
+                tableBody.appendChild(row);
+            });
+        }
+
+        if (meta) {
+            meta.textContent = filtered.length + ' plugin' + (filtered.length === 1 ? '' : 's') + ' displayed • Total tracked: ' + formatNumber(plugins.length);
+        }
+    }
+
+    function setSort(key) {
+        sortBy = key;
+        renderTable();
+    }
+
+    function stripHtml(html) {
+        var div = document.createElement('div');
+        div.innerHTML = html;
+        return (div.textContent || '').trim().toLowerCase();
+    }
+
+    fetch('/api/v1/datatable', { cache: 'force-cache' })
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            plugins = Array.isArray(data) ? data.map(function(item) {
+                return {
+                    nameHtml: item.name || '',
+                    nameText: stripHtml(item.name || ''),
+                    softwareHtml: item.softwareName || '',
+                    softwareText: stripHtml(item.softwareName || ''),
+                    ownerHtml: item.ownerName || '',
+                    ownerText: stripHtml(item.ownerName || ''),
+                    servers: Number(item.servers) || 0,
+                    players: Number(item.players) || 0
+                };
+            }) : [];
+            if (loadingRow) {
+                loadingRow.remove();
+            }
+            renderTable();
+        })
+        .catch(function() {
+            if (loadingRow) {
+                loadingRow.innerHTML = '<td colspan="5" class="px-4 py-8 text-center text-sm text-rose-300">Couldn’t load plugin data. Try again later.</td>';
+            }
+        });
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function(event) {
+            searchTerm = event.target.value.trim().toLowerCase();
+            renderTable();
+        });
+    }
+
+    if (sortServersButton) {
+        sortServersButton.addEventListener('click', function() { setSort('servers'); });
+    }
+    if (sortPlayersButton) {
+        sortPlayersButton.addEventListener('click', function() { setSort('players'); });
+    }
+})();
 </script>
 
 <% include templates/globalScripts.ejs %>

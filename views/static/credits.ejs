@@ -1,77 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="description" content="The credits page.">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <meta charset="utf-8"/>
+    <meta name="description" content="People and companies supporting bStats.">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>bStats - Credits</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/stylesheets/tailwind.css" rel="stylesheet" media="screen"/>
+    <link href="/stylesheets/style.css" rel="stylesheet" media="screen"/>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 antialiased">
 
 <% include ../templates/navigation.ejs %>
-<main>
-    <div class="container">
-        <div class="section no-pad-bot" id="index-banner">
-            <br/><br/>
-            <h1 class="header center <%= customColor1 %>-text">Credits</h1>
-            <ul class="collection with-header">
-                <li class="collection-header"><h4>Sponsored by GameHosting</h4></li>
-                <li class="collection-item">
-                    <div>
-                        bStats is sponsored by <b><a href="https://www.gamehosting.it/">GameHosting</a></b>!
-                        <a href="https://www.gamehosting.it/" class="secondary-content"><i class="material-icons">web</i></a>
-                    </div>
-                </li>
-            </ul>
-            <ul class="collection with-header">
-                <li class="collection-header"><h4>Author</h4></li>
-                <li class="collection-item">
-                    <div>
-                        <b>BtoBastian</b>
-                        <a href="http://bastian-oppermann.de" class="secondary-content"><i class="material-icons">web</i></a>
-                    </div>
-                </li>
-            </ul>
-            <ul class="collection with-header">
-                <li class="collection-header"><h4>Testers</h4></li>
-                <li class="collection-item">
-                    <div>
-                        <b>f_</b> who also suggested the name for bStats and forced me to create a credits page
-                    </div>
-                </li>
-            </ul>
-            <ul class="collection with-header">
-                <li class="collection-header"><h4>Special thanks</h4></li>
-                <li class="collection-item">
-                    <div>
-                        <b>Cloudflare</b>
-                        <a href="https://www.cloudflare.com/" class="secondary-content"><i class="material-icons">web</i></a>
-                    </div>
-                </li>
-                <li class="collection-item">
-                    <div>
-                        <b>Highcharts</b>
-                        <a href="http://www.highcharts.com/" class="secondary-content"><i class="material-icons">web</i></a>
-                    </div>
-                </li>
-            </ul>
-            <br/><br/><br/>
-        </div>
-    </div>
-</main>
-<% include ../templates/footer.ejs %>
-<!--  Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
 
+<main>
+    <section class="relative isolate overflow-hidden">
+        <div class="absolute inset-0 -z-20 bg-slate-950"></div>
+        <div class="absolute inset-0 -z-10 hero-noise opacity-30"></div>
+        <div class="mx-auto max-w-3xl px-6 py-24 sm:py-28">
+            <header class="space-y-6 text-center">
+                <span class="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">Thank you</span>
+                <h1 class="text-4xl font-semibold text-white sm:text-5xl">Credits & shout-outs</h1>
+                <p class="text-sm leading-6 text-slate-300">bStats exists because folks donate servers, code, and patience. Here’s a small, imperfect list of people and companies who keep the lights on.</p>
+            </header>
+
+            <div class="mt-12 space-y-8">
+                <section class="rounded-3xl border border-emerald-400/30 bg-emerald-500/5 p-8 shadow-xl shadow-emerald-900/20">
+                    <h2 class="text-2xl font-semibold text-white">Infra sponsor</h2>
+                    <p class="mt-3 text-sm text-emerald-100">GameHosting provides the servers that crunch the numbers.</p>
+                    <a href="https://www.gamehosting.it/" target="_blank" rel="noopener" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-200 hover:text-emerald-100">
+                        Visit GameHosting →
+                    </a>
+                </section>
+
+                <section class="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-xl shadow-slate-950/40 backdrop-blur">
+                    <h2 class="text-2xl font-semibold text-white">Built & maintained by</h2>
+                    <ul class="mt-4 space-y-3 text-sm text-slate-300">
+                        <li><span class="font-semibold text-white">BtoBastian</span> — creator, code wrangler and metrics addict. <a class="accent-text hover:opacity-80" href="http://bastian-oppermann.de" target="_blank" rel="noopener">Personal site</a></li>
+                    </ul>
+                </section>
+
+                <section class="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-xl shadow-slate-950/40 backdrop-blur">
+                    <h2 class="text-2xl font-semibold text-white">Testers & friends</h2>
+                    <ul class="mt-4 space-y-3 text-sm text-slate-300">
+                        <li><span class="font-semibold text-white">f_</span> — pushed for the name “bStats” and insisted we actually have a credits page.</li>
+                    </ul>
+                </section>
+
+                <section class="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-xl shadow-slate-950/40 backdrop-blur">
+                    <h2 class="text-2xl font-semibold text-white">Special thanks</h2>
+                    <ul class="mt-4 space-y-3 text-sm text-slate-300">
+                        <li><span class="font-semibold text-white">Cloudflare</span> — for keeping the pipes fast.</li>
+                        <li><span class="font-semibold text-white">Highcharts</span> — for powering our graphs since day one.</li>
+                    </ul>
+                </section>
+
+                <section class="rounded-3xl border border-white/10 bg-white/5 p-8 text-sm text-slate-300 shadow-xl shadow-slate-950/40 backdrop-blur">
+                    <h2 class="text-2xl font-semibold text-white">Want to help?</h2>
+                    <p class="mt-3">We track ideas and bugs on GitHub. Feel free to send a PR, sponsor the project, or simply hang out on Discord.</p>
+                    <div class="mt-4 flex flex-wrap gap-3">
+                        <a href="https://github.com/Bastian/bStats" target="_blank" rel="noopener" class="accent-bg inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold shadow-lg transition hover:shadow-xl">GitHub</a>
+                        <a href="https://discord.gg/qTXtXuf" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-white/80 transition hover:border-white/35 hover:text-white">Join the Discord</a>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+</main>
+
+<% include ../templates/footer.ejs %>
 <% include ../templates/globalScripts.ejs %>
 
 </body>

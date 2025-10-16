@@ -1,3 +1,12 @@
+function getAccentColor(defaultColor) {
+    if (typeof window === 'undefined' || !window.getComputedStyle) {
+        return defaultColor || '#0ea5e9';
+    }
+    var value = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
+    value = value ? value.trim() : '';
+    return value || defaultColor || '#0ea5e9';
+}
+
 $(function () {
     $.getJSON('/api/v1/plugins/' + getPluginId() + '/charts', function (charts) { // Get all charts of the plugin
         for (var chart in charts) {
@@ -78,14 +87,16 @@ function handlePieChart(chartId, chart) {
             },
             plotOptions: {
                 pie: {
-                    size: 180,
+                    size: 220,
                     allowPointSelect: true,
                     cursor: 'pointer',
                     dataLabels: {
                         enabled: $(window).width() > 600,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        format: '<span style="font-weight:600">{point.name}</span><br>{point.percentage:.1f}%',
+                        distance: 24,
                         style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            color: '#e2e8f0',
+                            textOutline: 'none'
                         }
                     },
                     showInLegend: $(window).width() <= 600
@@ -145,14 +156,16 @@ function handleDrilldownPieChart(chartId, chart) {
             },
             plotOptions: {
                 pie: {
-                    size: 180,
+                    size: 220,
                     allowPointSelect: true,
                     cursor: 'pointer',
                     dataLabels: {
                         enabled: $(window).width() > 600,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        format: '<span style="font-weight:600">{point.name}</span><br>{point.percentage:.1f}%',
+                        distance: 24,
                         style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            color: '#e2e8f0',
+                            textOutline: 'none'
                         }
                     },
                     showInLegend: $(window).width() <= 600
@@ -185,13 +198,17 @@ function handleLineChart(chartId, chart) {
         } else if (chartId === 'servers') {
             updateServersBadge(data);
         }
+        var showMarkers = data.length <= 120;
         $('#' + chartId + 'LineChart').highcharts('StockChart', {
 
             chart:{
-                zoomType: 'x'
+                zoomType: 'x',
+                backgroundColor: 'transparent',
+                spacing: [12, 16, 16, 16]
             },
 
             rangeSelector: {
+                enabled: true,
                 buttons: [{
                     type: 'day',
                     count: 1,
@@ -221,7 +238,8 @@ function handleLineChart(chartId, chart) {
                     text: 'All'
                 }],
                 selected: 3,
-                inputEnabled: false
+                inputEnabled: !isMobile,
+                inputDateFormat: '%e %b \'%y'
             },
 
             exporting: {
@@ -239,26 +257,51 @@ function handleLineChart(chartId, chart) {
                 },
                 buttons: {
                     contextButton: {
-                        menuItems: ['loadFullData']
+                        menuItems: [
+                            'downloadPNG',
+                            'downloadSVG',
+                            'separator',
+                            'downloadCSV',
+                            'downloadXLS',
+                            'viewData',
+                            'separator',
+                            'loadFullData'
+                        ]
                     }
                 }
             },
 
             xAxis: {
-                ordinal: false
+                ordinal: false,
+                gridLineColor: 'rgba(148, 163, 184, 0.08)',
+                crosshair: {
+                    color: getAccentColor('rgba(14,165,233,0.65)'),
+                    width: 1
+                }
             },
 
             yAxis: {
                 min: 0,
+                gridLineColor: 'rgba(148, 163, 184, 0.12)',
+                gridLineDashStyle: 'Dash',
+                tickPixelInterval: 64,
                 labels: {
                     formatter: function () {
-                        if (this.value % 1 != 0) {
-                            return "";
-                        } else {
-                            return this.value;
+                        if (this.value % 1 !== 0) {
+                            return '';
                         }
+                        return this.value;
                     }
+                },
+                title: {
+                    text: chart.yAxis && chart.yAxis.text ? chart.yAxis.text : null
                 }
+            },
+
+            tooltip: {
+                shared: true,
+                backgroundColor: 'rgba(15, 23, 42, 0.92)',
+                borderColor: 'rgba(148, 163, 184, 0.35)'
             },
 
             title : {
@@ -267,7 +310,18 @@ function handleLineChart(chartId, chart) {
 
             plotOptions:{
                 series: {
-                    turboThreshold: 0 // disable the 1000 limit
+                    turboThreshold: 0, // disable the 1000 limit
+                    lineWidth: 2.5,
+                    states: {
+                        hover: {
+                            lineWidth: 3
+                        }
+                    },
+                    marker: {
+                        enabled: showMarkers,
+                        radius: 3,
+                        symbol: 'circle'
+                    }
                 }
             },
 
@@ -285,57 +339,85 @@ function handleLineChart(chartId, chart) {
 
 function handleBarChart(chartId, chart) {
     $.getJSON('/api/v1/plugins/' + getPluginId() + '/charts/' + chartId + '/data', function (data) {
+        var categories = data.map(function (d) { return d.name; });
+        var estimatedHeight = Math.max(340, categories.length * chart.data.barNames.length * 34 + 160);
         $('#' + chartId + 'Bar').highcharts({
             chart: {
                 type: 'bar',
-                renderTo: 'container',
-                marginTop: 40,
-                marginBottom: 80,
-                height: data.length * chart.data.barNames.length * (30 + chart.data.barNames.length * 15) + 120 // 20px per data item plus top and bottom margins
+                backgroundColor: 'transparent',
+                spacing: [16, 24, 32, 16],
+                height: estimatedHeight
             },
             title: {
                 text: '<a href="#' + chartId + '" style="text-decoration: none; color: inherit;">' + chart.title + '</a>'
             },
-            plotOptions: {
-                bar: {
-                    dataLabels: {
-                        enabled: true
+            xAxis: {
+                categories: categories,
+                lineColor: 'rgba(148, 163, 184, 0.2)',
+                gridLineColor: 'rgba(148, 163, 184, 0.12)',
+                labels: {
+                    style: {
+                        color: '#cbd5f5',
+                        fontSize: '12px'
                     }
-                },
-                series: {
-                    pointWidth: 25
                 }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size: 18px"><u><b>{point.key}</b></u></span><br/>',
-                pointFormat: '<b>Total</b>: {point.y} ' + chart.data.valueName
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'top',
-                x: -40,
-                y: 80,
-                floating: true,
-                borderWidth: 1,
-                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-                shadow: true
-            },
-            exporting: {
-                enabled: false
             },
             yAxis: {
                 min: 0,
+                gridLineColor: 'rgba(148, 163, 184, 0.12)',
                 title: {
-                    text: chart.data.valueName,
-                    align: 'high'
+                    text: chart.data.valueName || null
                 },
                 labels: {
-                    overflow: 'justify'
+                    style: {
+                        color: '#94a3b8',
+                        fontSize: '12px'
+                    }
                 }
             },
-            xAxis: {
-                categories: data.map(d => d.name)
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true,
+                        style: {
+                            color: '#e2e8f0',
+                            textOutline: 'none',
+                            fontSize: '12px',
+                            fontWeight: 500
+                        }
+                    }
+                },
+                series: {
+                    borderRadius: 6,
+                    pointPadding: 0.15,
+                    groupPadding: 0.12,
+                    maxPointWidth: 28
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(15, 23, 42, 0.92)',
+                borderColor: 'rgba(148, 163, 184, 0.35)',
+                style: {
+                    color: '#e2e8f0'
+                },
+                headerFormat: '<span style="font-size:13px;font-weight:600">{point.key}</span><br/>',
+                pointFormat: '<span style="color:{series.color};font-weight:600">{series.name}</span>: {point.y}' + (chart.data.valueName ? ' ' + chart.data.valueName : '')
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'left',
+                verticalAlign: 'top',
+                itemStyle: {
+                    color: '#cbd5f5',
+                    fontWeight: 500
+                },
+                itemHoverStyle: {
+                    color: '#f8fafc'
+                },
+                symbolRadius: 6
+            },
+            exporting: {
+                enabled: true
             },
             series: chart.data.barNames.map((barName, index) => ({
                 name: barName,
@@ -352,65 +434,105 @@ function handleMapChart(chartId, chart) {
             this.flag = this.code.replace('UK', 'GB').toLowerCase();
         });
 
-        // Initiate the chart
+        var accent = getAccentColor('#38bdf8');
+        var accentSoft = Highcharts.color(accent).setOpacity(0.18).get('rgba');
+        var accentMid = Highcharts.color(accent).setOpacity(0.45).get('rgba');
+        var accentStrong = Highcharts.color(accent).brighten(-0.1).get();
+        var valueLabel = chart.data.valueName || '';
+
         $('#' + chartId + 'Map').highcharts('Map', {
+
+            chart: {
+                backgroundColor: 'transparent',
+                spacing: [12, 12, 12, 12]
+            },
 
             title: {
                 text: '<a href="#' + chartId + '" style="text-decoration: none; color: inherit;">' + chart.title + '</a>'
             },
 
             legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom',
+                backgroundColor: 'rgba(15, 23, 42, 0.65)',
+                borderRadius: 18,
+                borderWidth: 0,
+                padding: 14,
                 title: {
                     text: chart.data.valueName,
                     style: {
-                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                        color: '#f8fafc',
+                        fontWeight: 600,
+                        fontSize: '12px'
                     }
+                },
+                itemStyle: {
+                    color: '#cbd5f5'
+                },
+                itemHoverStyle: {
+                    color: '#f8fafc'
                 }
             },
 
             exporting: {
-                enabled: false
+                enabled: true
             },
 
             mapNavigation: {
                 enabled: true,
                 enableMouseWheelZoom: false,
                 buttonOptions: {
-                    verticalAlign: 'bottom'
+                    verticalAlign: 'top',
+                    theme: {
+                        fill: 'rgba(148, 163, 184, 0.12)',
+                        'stroke-width': 0,
+                        states: {
+                            hover: {
+                                fill: 'rgba(148, 163, 184, 0.24)'
+                            },
+                            select: {
+                                fill: accent
+                            }
+                        }
+                    }
                 }
             },
 
             tooltip: {
-                backgroundColor: 'none',
-                borderWidth: 0,
-                shadow: false,
                 useHTML: true,
-                padding: 0,
-                pointFormat: '<span class="f32"><span class="flag {point.flag}"></span></span>' +
-                ' {point.name}: <b>{point.value}</b>',
-                positioner: function () {
-                    return { x: 0, y: 250 };
-                }
+                backgroundColor: 'rgba(15, 23, 42, 0.92)',
+                borderColor: 'rgba(148, 163, 184, 0.35)',
+                borderRadius: 12,
+                shadow: false,
+                padding: 12,
+                pointFormat: '<div class="flex items-center gap-2"><span class="f32"><span class="flag {point.flag}"></span></span><span>{point.name}</span></div><div style="margin-top:6px;font-weight:600;font-size:14px;">{point.value}' + (valueLabel ? ' ' + valueLabel : '') + '</div>'
             },
 
             colorAxis: {
                 min: 1,
-                max: 5000,
                 type: 'logarithmic',
-                minColor: '#FFCDD2',
-                maxColor: '#B71C1C'
+                stops: [
+                    [0, accentSoft],
+                    [0.5, accentMid],
+                    [1, accentStrong]
+                ],
+                minorTickInterval: 0,
+                tickPixelInterval: 150
             },
 
             series : [{
                 data : data,
                 mapData: Highcharts.maps['custom/world'],
                 joinBy: ['iso-a2', 'code'],
-                name: chart.data.valueName,
-                color: '#F44336',
+                name: valueLabel,
+                color: accent,
+                nullColor: '#1e293b',
+                borderColor: 'rgba(148, 163, 184, 0.25)',
                 shadow: false,
                 states: {
                     hover: {
-                        color: '#B71C1C'
+                        color: accentStrong
                     }
                 }
             }]

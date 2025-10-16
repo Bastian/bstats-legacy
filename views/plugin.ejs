@@ -1,162 +1,192 @@
 <!DOCTYPE html>
-<!-- Note: IntelliJ has problems with width, ... in jQuery .html() -->
-<!--suppress CssUnknownProperty -->
 <html lang="en">
 <head>
-    <!-- Twitter stuff -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="@btobastian" />
-    <meta name="twitter:title" content="<%= plugin.name %> | bStats" />
-    <meta name="twitter:description" content="Statistics about <%= plugin.name %>!" />
-    <meta name="twitter:image" content="https://bstats.org/images/Twitter.jpg" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@btobastian"/>
+    <meta name="twitter:title" content="<%= plugin.name %> | bStats"/>
+    <meta name="twitter:description" content="Statistics about <%= plugin.name %>!"/>
+    <meta name="twitter:image" content="https://bstats.org/images/Twitter.jpg"/>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="description" content="Some stats about <%= plugin.name %>.">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-    <title>bStats - <%= plugin.name %></title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Realtime usage analytics and charts for <%= plugin.name %> on <%= software.name %>."/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>bStats — <%= plugin.name %></title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/stylesheets/tailwind.css" rel="stylesheet" media="screen"/>
+    <link href="/stylesheets/style.css" rel="stylesheet" media="screen"/>
 
-    <!-- Flags for the map -->
-    <link rel="stylesheet" type="text/css" href="https://cloud.github.com/downloads/lafeber/world-flags-sprite/flags32.css" />
-
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
+<body class="bg-slate-950 text-slate-100 antialiased">
 
-<body>
 <% include templates/navigation.ejs %>
+
 <main>
-    <div class="section no-pad-bot" id="index-banner">
-        <div class="container">
-            <br><br>
-            <h1 class="header center <%= customColor1 %>-text truncate">
-                <%= plugin.name %>
-                <% if (isOwner || (user != null && user.admin)) { %>
-                <a href="/editPlugin/<%= software.url %>/<%= plugin.name %>/<%= plugin.id %>"><sup><i title="Edit plugin settings" class="material-icons small">build</i></sup></a>
-                <% } %>
-            </h1>
-            <div class="row center">
-                <h5 class="header col s12 light authorbox">by <a class="<%= customColor1 %>-text text-darken-2" href="/author/<%= plugin.owner %>"><%= plugin.owner %></a></h5>
+    <section class="relative isolate overflow-hidden">
+        <div class="absolute inset-0 -z-20 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+        <div class="absolute inset-x-0 top-[-18rem] -z-10 flex justify-center opacity-70 blur-3xl">
+            <div class="h-[28rem] w-[60rem] max-w-full" style="background: radial-gradient(circle at top, var(--accent-color) 0%, rgba(15,118,110,0) 65%);"></div>
+        </div>
+        <div class="relative mx-auto max-w-7xl px-6 pb-20 pt-28 sm:px-8">
+            <div class="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+                <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1">Plugin profile</span>
+                <span class="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-1">
+                    <span class="text-white/50">Platform</span>
+                    <span class="text-white"><%= software.name %></span>
+                </span>
+            </div>
+            <div class="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr),minmax(0,380px)] lg:items-start">
+                <div class="space-y-10">
+                    <div class="space-y-6">
+                        <h1 class="text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                            <%= plugin.name %>
+                        </h1>
+                        <div class="flex flex-wrap items-center gap-4 text-sm text-slate-300">
+                            <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1">
+                                <span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
+                                Tracking live data
+                            </span>
+                            <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1">
+                                Maintained by <a href="/author/<%= plugin.owner %>" class="accent-text font-semibold hover:opacity-90"><%= plugin.owner %></a>
+                            </span>
+                            <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1">
+                                Plugin ID
+                                <code class="rounded bg-slate-900/70 px-2 py-0.5 text-xs font-semibold"><%= plugin.id %></code>
+                            </span>
+                        </div>
+                    </div>
+                    <p class="max-w-3xl text-lg leading-8 text-slate-300">These charts combine anonymized server, player and version data sent by installations of <%= plugin.name %>. Use the snapshots below to monitor growth, track adoption on new releases and share public stats with your community.</p>
+                    <div class="flex flex-wrap items-center gap-4">
+                        <% if (isOwner || (typeof user !== 'undefined' && user && user.admin)) { %>
+                        <a href="/editPlugin/<%= software.url %>/<%= plugin.name %>/<%= plugin.id %>" class="accent-bg inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold shadow-lg shadow-slate-950/50 transition hover:shadow-xl">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M16.862 3.487a2.1 2.1 0 0 1 2.97 2.97L8.93 17.36l-3.543.573.573-3.544L16.862 3.487zM15 5l3 3"></path>
+                            </svg>
+                            Manage plugin
+                        </a>
+                        <% } %>
+                        <button id="copyPluginId" type="button" data-plugin-id="<%= plugin.id %>" class="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-white/80 transition hover:border-white/35 hover:text-white">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M8 7V5.2A2.2 2.2 0 0 1 10.2 3h8.6A2.2 2.2 0 0 1 21 5.2v8.6A2.2 2.2 0 0 1 18.8 16H17M8 7H5.2A2.2 2.2 0 0 0 3 9.2v8.6A2.2 2.2 0 0 0 5.2 20h8.6a2.2 2.2 0 0 0 2.2-2.2V15M8 7h6.8A2.2 2.2 0 0 1 17 9.2V16"></path>
+                            </svg>
+                            Copy plugin ID
+                        </button>
+                        <a href="/plugin/1337/random" class="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-white/80 transition hover:border-white/35 hover:text-white">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="m4 4 9 16m3-10 4 7M4 20l4-7"></path>
+                            </svg>
+                            Explore another plugin
+                        </a>
+                    </div>
+                </div>
+                <aside class="rounded-3xl border border-white/10 bg-slate-900/65 p-6 shadow-xl shadow-slate-950/40 backdrop-blur">
+                    <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.35em] text-white/60">
+                        <span>Snapshot</span>
+                        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-white/70">
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                            Live
+                        </span>
+                    </div>
+                    <dl class="mt-6 space-y-4 text-sm text-slate-300">
+                        <div class="flex items-center justify-between gap-4">
+                            <dt class="uppercase tracking-wide text-slate-400">Plugin ID</dt>
+                            <dd class="font-semibold text-white"><%= plugin.id %></dd>
+                        </div>
+                        <div class="flex items-center justify-between gap-4">
+                            <dt class="uppercase tracking-wide text-slate-400">Platform</dt>
+                            <dd class="font-semibold text-white"><%= software.name %></dd>
+                        </div>
+                        <div class="flex items-center justify-between gap-4">
+                            <dt class="uppercase tracking-wide text-slate-400">Maintainer</dt>
+                            <dd class="font-semibold text-white truncate max-w-[200px]" title="<%= plugin.owner %>"><%= plugin.owner %></dd>
+                        </div>
+                    </dl>
+                    <div class="mt-8 rounded-2xl border border-white/10 bg-white/5 p-4 text-xs leading-5 text-slate-300">
+                        Charts refresh every few minutes. To embed analytics elsewhere, use the chart export options or query the public REST API.
+                    </div>
+                    <div class="mt-6 flex flex-col gap-3 text-sm">
+                        <a href="/help/rest-api" class="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-white/80 transition hover:border-white/35 hover:text-white">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M4 4h16v6H4zm0 10h16v6H4z"></path>
+                            </svg>
+                            REST API Reference
+                        </a>
+                        <a href="https://discord.gg/qTXtXuf" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-white/80 transition hover:border-white/35 hover:text-white">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M20.317 4.369A19.791 19.791 0 0 0 15.89 3a13.55 13.55 0 0 0-.67 1.37 18.626 18.626 0 0 0-5.44 0A12.72 12.72 0 0 0 9.11 3a19.736 19.736 0 0 0-4.43 1.379A20.548 20.548 0 0 0 .964 18.495a19.912 19.912 0 0 0 6.082 3.083 14.978 14.978 0 0 0 1.287-2.084 12.876 12.876 0 0 1-2.042-.979c.17-.122.336-.247.497-.378A13.125 13.125 0 0 0 8.7 19.6a12.949 12.949 0 0 0 6.594 0c.65.45 1.34.84 2.065 1.166.161.131.328.256.498.378-.653.314-1.329.583-2.02.804.36.72.78 1.407 1.256 2.054a19.897 19.897 0 0 0 6.109-3.041A20.546 20.546 0 0 0 20.317 4.37Z"></path>
+                            </svg>
+                            Chat with the team
+                        </a>
+                    </div>
+                </aside>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="row">
-        <div class="col s12 m6 l4 offset-l2">
-            <div class="card-panel <%= customColor1 %>">
-                <span class="white-text"><i class="material-icons left">storage</i><b id="serversBadge">Servers (Current/Record): loading...</b></span>
+    <section class="bg-slate-900/60">
+        <div class="mx-auto max-w-7xl px-6 py-16 sm:px-8 sm:py-20">
+            <div class="grid gap-6 sm:grid-cols-2">
+                <div class="rounded-3xl border border-white/10 bg-slate-950/70 p-6 shadow-xl shadow-slate-950/30">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Servers</p>
+                            <p id="serversBadge" class="mt-3 text-3xl font-semibold text-white">Loading…</p>
+                            <p class="mt-1 text-xs uppercase tracking-wide text-slate-500">Current / Record</p>
+                        </div>
+                        <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-300">
+                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M4 7h16M4 12h16M4 17h16"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <p class="mt-4 text-sm leading-6 text-slate-400">Track total online servers pinging this plugin across every supported network.</p>
+                </div>
+                <div class="rounded-3xl border border-white/10 bg-slate-950/70 p-6 shadow-xl shadow-slate-950/30">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Players</p>
+                            <p id="playersBadge" class="mt-3 text-3xl font-semibold text-white">Loading…</p>
+                            <p class="mt-1 text-xs uppercase tracking-wide text-slate-500">Current / Record</p>
+                        </div>
+                        <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/10 text-sky-300">
+                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 6a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 7c-3.17 0-6 1.56-6 3.5V18a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-1.5c0-1.94-2.83-3.5-6-3.5Z"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <p class="mt-4 text-sm leading-6 text-slate-400">Measure how many players interact with this plugin in real time versus the historical peak.</p>
+                </div>
+            </div>
+
+            <div class="mt-16">
+                <div class="flex flex-wrap items-end justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-semibold tracking-tight text-white sm:text-3xl">Interactive charts</h2>
+                        <p class="mt-2 text-sm text-slate-400">Zoom, export or filter charts below. New data points arrive every few minutes.</p>
+                    </div>
+                    <a href="/help/custom-charts" class="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white/70 transition hover:border-white/35 hover:text-white">
+                        Customize charts
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 5v14m7-7H5"></path>
+                        </svg>
+                    </a>
+                </div>
+                <div id="charts" class="mt-12 grid grid-cols-1 gap-8 xl:grid-cols-2"></div>
+                <div class="mt-12 rounded-3xl border border-white/10 bg-white/5 p-6 text-center text-sm text-slate-400">
+                    Charts powered by <a href="https://www.highcharts.com" class="accent-text font-semibold transition hover:opacity-80">Highcharts</a>. Export as PNG, SVG or CSV via the toolbar in the top-right corner of each chart.
+                </div>
             </div>
         </div>
-        <div class="col s12 m6 l4">
-            <div class="card-panel <%= customColor1 %>">
-                <span class="white-text"><i class="material-icons left">people</i><b id="playersBadge">Players (Current/Record): loading...</b></span>
-            </div>
-        </div>
-    </div>
-    <br><br>
-
-    <div id="charts" class="row">
-        <!-- Charts get added afterwards using jQuery -->
-    </div>
-
-    <div class="center">
-        Charts powered by <a href="http://highcharts.com">Highcharts</a>
-        <br/>
-        <br/>
-    </div>
-
-    <script type="application/javascript">
-        $.getJSON('/api/v1/plugins/<%= plugin.id %>/charts', function (charts) {
-            var chartIdsSorted = Object.keys(charts).sort(function(a,b){return charts[a].position-charts[b].position});
-            var previousRowWasFull = true;
-            for (var i = 0; i < chartIdsSorted.length; i++) {
-                var chartId = chartIdsSorted[i];
-                if (!charts.hasOwnProperty(chartId)) {
-                    continue;
-                }
-                var chart = charts[chartId];
-
-                var nextChartIsCompleteRow = true;
-                if (chartIdsSorted.length > i + 1) {
-                    var nextChartId = chartIdsSorted[i + 1];
-                    if (charts.hasOwnProperty(nextChartId)) {
-                        var nextChart = charts[nextChartId];
-                        switch (nextChart.type) {
-                            case 'simple_pie':
-                            case 'advanced_pie':
-                            case 'drilldown_pie':
-                                nextChartIsCompleteRow = false;
-                                break;
-                            case 'single_linechart':
-                            case 'simple_map':
-                            case 'advanced_map':
-                            case 'simple_bar':
-                            case 'advanced_bar':
-                                nextChartIsCompleteRow = true;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-
-                var jQueryChart = $('#charts');
-                switch (chart.type) {
-                    case 'simple_pie':
-                    case 'advanced_pie':
-                    case 'drilldown_pie':
-                        var colWidth = "s12 m12 l12 xl12";
-                        if (previousRowWasFull && nextChartIsCompleteRow) {
-                            colWidth = "s12 m12 l12 xl12";
-                            previousRowWasFull = true;
-                        } else if (!previousRowWasFull) {
-                            colWidth = "s12 m6 l6 xl5";
-                            previousRowWasFull = true;
-                        } else if (!nextChartIsCompleteRow) {
-                            colWidth = "s12 m6 l6 xl5 offset-xl1";
-                            previousRowWasFull = false;
-                        }
-                        jQueryChart.html(jQueryChart.html() + '<div id="' + chartId + '" class="col ' + colWidth + '"><div id="' + chartId + 'Pie" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div></div>');
-                        break;
-                    case 'single_linechart':
-                        jQueryChart.html(jQueryChart.html() + '<div id="' + chartId + '" class="col s12"><div id="' + chartId + 'LineChart" class="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div><br><br></div>');
-                        previousRowWasFull = true;
-                        break;
-                    case 'simple_map':
-                    case 'advanced_map':
-                        jQueryChart.html(jQueryChart.html() + '<div id="' + chartId + '" class="col s12"><div id="' + chartId + 'Map" class="container" style="min-width: 310px; height: 600px; margin: 0 auto"></div><br><br></div>');
-                        previousRowWasFull = true;
-                        break;
-                    case 'simple_bar':
-                    case 'advanced_bar':
-                        jQueryChart.html(jQueryChart.html() + '<div id="' + chartId + '" class="col s12"><div id="' + chartId + 'Bar" class="container" style="min-width: 310px; margin: 0 auto"></div><br><br></div>');
-                        previousRowWasFull = true;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if (window.location.hash) { // Scroll to anchor
-                $('html,body').animate({
-                    scrollTop: $(window.location.hash).offset().top
-                }, 2000);
-            }
-        });
-    </script>
-
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
 
-<!-- Scripts -->
-
-<!-- Materialize -->
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-<!-- Charts -->
+<!-- Highcharts -->
 <script src="https://code.highcharts.com/stock/6.0.1/highstock.js"></script>
 <script src="https://code.highcharts.com/maps/6.0.1/modules/map.js"></script>
 <script src="https://code.highcharts.com/6.0.1/modules/exporting.js"></script>
@@ -166,27 +196,114 @@
 <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
 <script src="/javascripts/charts/themes/chartTheme.js"></script>
 <script src="/javascripts/charts/charts.js"></script>
+
+<script>
+(function() {
+    var copyButton = document.getElementById('copyPluginId');
+    if (!copyButton) {
+        return;
+    }
+    copyButton.addEventListener('click', function() {
+        var pluginId = copyButton.getAttribute('data-plugin-id');
+        if (!navigator.clipboard) {
+            var tempInput = document.createElement('input');
+            tempInput.value = pluginId;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            tempInput.remove();
+        } else {
+            navigator.clipboard.writeText(pluginId).catch(function() {});
+        }
+        copyButton.classList.add('bg-white/10', 'text-white');
+        setTimeout(function() {
+            copyButton.classList.remove('bg-white/10', 'text-white');
+        }, 1200);
+    });
+})();
+</script>
+
+<script>
+    $.getJSON('/api/v1/plugins/<%= plugin.id %>/charts', function (charts) {
+        var chartIdsSorted = Object.keys(charts).sort(function(a,b){return charts[a].position-charts[b].position});
+        var chartsGrid = $('#charts');
+        var cardBase = 'chart-card relative overflow-hidden rounded-3xl border border-white/10 bg-slate-950/70 p-6 shadow-xl shadow-slate-950/30 backdrop-blur';
+        var pieSurface = 'chart-surface h-[420px] w-full';
+        var lineSurface = 'chart-surface h-[420px] w-full';
+        var mapSurface = 'chart-surface h-[600px] w-full';
+        var barSurface = 'chart-surface h-[420px] w-full';
+
+        for (var i = 0; i < chartIdsSorted.length; i++) {
+            var chartId = chartIdsSorted[i];
+            if (!charts.hasOwnProperty(chartId)) {
+                continue;
+            }
+            var chart = charts[chartId];
+            var markup = '';
+
+            switch (chart.type) {
+                case 'simple_pie':
+                case 'advanced_pie':
+                case 'drilldown_pie':
+                    markup = '<article id="' + chartId + '" class="' + cardBase + ' xl:col-span-1"><div id="' + chartId + 'Pie" class="' + pieSurface + '"></div></article>';
+                    break;
+                case 'single_linechart':
+                    markup = '<article id="' + chartId + '" class="' + cardBase + ' xl:col-span-2"><div id="' + chartId + 'LineChart" class="' + lineSurface + '"></div></article>';
+                    break;
+                case 'simple_map':
+                case 'advanced_map':
+                    markup = '<article id="' + chartId + '" class="' + cardBase + ' xl:col-span-2"><div id="' + chartId + 'Map" class="' + mapSurface + '"></div></article>';
+                    break;
+                case 'simple_bar':
+                case 'advanced_bar':
+                    markup = '<article id="' + chartId + '" class="' + cardBase + ' xl:col-span-2"><div id="' + chartId + 'Bar" class="' + barSurface + '"></div></article>';
+                    break;
+                default:
+                    break;
+            }
+
+            if (markup) {
+                chartsGrid.append(markup);
+            }
+        }
+
+        if (window.location.hash) {
+            $('html,body').animate({
+                scrollTop: $(window.location.hash).offset().top
+            }, 1200);
+        }
+    });
+</script>
+
 <script type="application/javascript">
     function getPluginId() {
         return "<%= plugin.id %>";
     }
 
     function updatePlayersBadge(data) {
-        let current = data[data.length-1][1];
-        let record = 0;
-        for (let i = 0; i < data.length; i++) {
+        if (!Array.isArray(data) || data.length === 0) {
+            $('#playersBadge').text('n/a');
+            return;
+        }
+        var current = data[data.length-1][1];
+        var record = 0;
+        for (var i = 0; i < data.length; i++) {
             record = data[i][1] > record ? data[i][1] : record;
         }
-        $('#playersBadge').html(`Players (Current/Record): ${current} / ${record}`);
+        $('#playersBadge').text(current + ' / ' + record);
     }
 
     function updateServersBadge(data) {
-        let current = data[data.length-1][1];
-        let record = 0;
-        for (let i = 0; i < data.length; i++) {
+        if (!Array.isArray(data) || data.length === 0) {
+            $('#serversBadge').text('n/a');
+            return;
+        }
+        var current = data[data.length-1][1];
+        var record = 0;
+        for (var i = 0; i < data.length; i++) {
             record = data[i][1] > record ? data[i][1] : record;
         }
-        $('#serversBadge').html(`Servers (Current/Record): ${current} / ${record}`);
+        $('#serversBadge').text(current + ' / ' + record);
     }
 </script>
 

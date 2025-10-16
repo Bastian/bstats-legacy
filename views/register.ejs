@@ -1,155 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8"/>
     <meta name="description" content="Create a new bStats account.">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>bStats - Register</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-
-    <!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/stylesheets/tailwind.css" rel="stylesheet" media="screen"/>
+    <link href="/stylesheets/style.css" rel="stylesheet" media="screen"/>
 </head>
-
-<body>
+<body class="bg-slate-950 text-slate-100 antialiased">
 
 <% include templates/navigation.ejs %>
-<main>
-    <div class="container">
-        <br><br>
-        <div class="hide-on-med-and-down"><br><br></div>
-        <div class="row">
-            <% if (failed) { %>
-            <h5 class="red-text col s12 center-align">There's already an account with this name!</h5>
-            <% } else if (wrongCaptcha) { %>
-            <h5 class="red-text col s12 center-align">Please solve the captcha!</h5>
-            <% } else { %>
-            <h5 class="<%= customColor1 %>-text col s12 center-align">Register an account</h5>
-            <% } %>
-            <br><br>
-            <div class="col s12 m8 l6 offset-m2 offset-l3 z-depth-1 grey lighten-4 row">
-                <form class="col s12" method="post">
-                    <br>
-                    <!-- Name -->
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="username" type="text" name="username"
-                                   pattern="^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$" length="32" class="validate">
-                            <label for="username" data-error="Invalid username">Name</label>
-                        </div>
-                    </div>
-                    <!-- Password -->
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="password" type="password" name="password">
-                            <label for="password">Password</label>
-                        </div>
-                    </div>
-                    <!-- Password confirm -->
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="password_confirm" type="password">
-                            <label for="password_confirm">Confirm password</label>
-                            <font class="red-text please_confirm" style="display: none;">Passwords do not match!</font>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-left: 0">
-                        <p>
-                            <input type="checkbox" id="accept-privacy-policy"/>
-                            <label for="accept-privacy-policy">Accept <a href="/privacy-policy">privacy policy</a></label>
-                        </p>
-                    </div>
-                    <!-- <div style="text-align: center">
-                        <div class="g-recaptcha" style="display: inline-block"
-                             data-sitekey="<%= publicKey %>" data-callback="correctCaptcha"></div>
-                    </div> -->
-                    <br/>
-                    <!-- Register button -->
-                    <div class='row'>
-                        <a class='col s12 btn btn-large waves-effect <%= customColor1 %> disabled invalid_account'>Register</a>
-                        <button type='submit' name='btn_register' class='col s12 btn btn-large waves-effect <%= customColor1 %> valid_account' style="display: none;">
-                            Register
-                        </button>
-                    </div>
-                </form>
-            </div>
 
-            <a href="/login" class="col s12 center-align">Already have an account? Login!</a>
+<main class="flex flex-col">
+    <section class="relative flex flex-1 items-center justify-center px-6 py-16 sm:py-24">
+        <div class="absolute inset-0 -z-10 bg-slate-950"></div>
+        <div class="absolute inset-0 -z-10 hero-noise opacity-30"></div>
+
+        <div class="w-full max-w-xl space-y-8">
+            <header class="space-y-3 text-center">
+                <h1 class="text-3xl font-semibold text-white">Create your bStats account</h1>
+                <% if (failed) { %>
+                <p class="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm text-red-200">That username is already taken. Try another handle!</p>
+                <% } else if (wrongCaptcha) { %>
+                <p class="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-sm text-amber-100">Please complete the captcha before submitting.</p>
+                <% } else { %>
+                <p class="text-sm leading-6 text-slate-300">Pick a username, drop in a password and agree to the privacy policy. That’s it—no email verification, no fluff.</p>
+                <% } %>
+            </header>
+
+            <form method="post" class="rounded-3xl border border-white/10 bg-slate-900/75 p-8 shadow-2xl shadow-slate-950/60 backdrop-blur">
+                <div class="space-y-5">
+                    <label for="username" class="block text-sm font-medium text-slate-200">Username</label>
+                    <input id="username" name="username" type="text" maxlength="32" pattern="^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$" required class="input-shell focus-accent w-full" placeholder="PluginWizard" />
+                    <p class="text-xs text-slate-400">Letters, numbers, underscores and dashes. Spaces are fine too.</p>
+                </div>
+
+                <div class="mt-6 space-y-5">
+                    <label for="password" class="block text-sm font-medium text-slate-200">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="new-password" required class="input-shell focus-accent w-full" placeholder="••••••••" />
+                </div>
+
+                <div class="mt-6 space-y-2">
+                    <label for="password_confirm" class="block text-sm font-medium text-slate-200">Confirm password</label>
+                    <input id="password_confirm" type="password" autocomplete="new-password" required class="input-shell focus-accent w-full" placeholder="Repeat password" />
+                    <p id="password-warning" class="hidden text-xs text-rose-300">Passwords don’t match.</p>
+                </div>
+
+                <label class="mt-6 flex items-start gap-3 text-sm text-slate-300">
+                    <input type="checkbox" id="accept-privacy-policy" class="mt-0.5 h-4 w-4 rounded border-white/30 bg-slate-900 text-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]">
+                    <span>I agree to the <a href="/privacy-policy" class="accent-text hover:opacity-80">privacy policy</a>.</span>
+                </label>
+
+                <div class="mt-8 space-y-3">
+                    <button type="button" id="register-disabled" class="w-full rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-400 opacity-60 cursor-not-allowed">Complete the steps above</button>
+                    <button type="submit" name="btn_register" id="register-submit" class="accent-bg hidden w-full rounded-full px-6 py-3 text-sm font-semibold shadow-lg shadow-slate-950/40 transition hover:shadow-xl">
+                        Create account
+                    </button>
+                </div>
+            </form>
+
+            <p class="text-center text-sm text-slate-400">
+                Already registered? <a href="/login" class="accent-text hover:opacity-80">Log in instead</a>.
+            </p>
         </div>
-    </div>
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
 
-<!-- Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
+<script>
+    (function() {
+        var usernameInput = document.getElementById('username');
+        var passwordInput = document.getElementById('password');
+        var confirmInput = document.getElementById('password_confirm');
+        var privacyCheckbox = document.getElementById('accept-privacy-policy');
+        var warning = document.getElementById('password-warning');
+        var submitButton = document.getElementById('register-submit');
+        var disabledButton = document.getElementById('register-disabled');
 
-<script type="application/javascript">
-    $(document).on('input','#password',function () {
-        checkIfValidAccount();
-        checkPasswords();
-    });
-    $(document).on('input','#password_confirm',function () {
-        checkIfValidAccount();
-        checkPasswords();
-    });
-    $(document).on('input','#username',function () {
-        checkIfValidAccount();
-    });
+        function passwordsMatch() {
+            return passwordInput.value === confirmInput.value && passwordInput.value.length > 0;
+        }
 
-    $(document).on('input','#accept-privacy-policy',function () {
-        checkIfValidAccount();
-    });
-    captchaSolved = false;
+        function usernameValid() {
+            return /^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$/.test(usernameInput.value);
+        }
 
-    function checkPasswords() {
-        if (document.getElementById('password').value === document.getElementById('password_confirm').value) {
-            $(".please_confirm").hide();
-        } else {
-            $(".please_confirm").show();
-        }
-    }
+        function updateState() {
+            var matches = passwordsMatch();
+            warning.classList.toggle('hidden', matches || (passwordInput.value.length === 0 && confirmInput.value.length === 0));
 
-    function checkIfValidAccount() {
-        if (document.getElementById('password').value !== document.getElementById('password_confirm').value) {
-            $(".valid_account").hide();
-            $(".invalid_account").show();
-            return;
+            var canSubmit = matches && usernameValid() && privacyCheckbox.checked;
+            submitButton.classList.toggle('hidden', !canSubmit);
+            disabledButton.classList.toggle('hidden', canSubmit);
         }
-        if (1 > document.getElementById('password').value.length) {
-            $(".valid_account").hide();
-            $(".invalid_account").show();
-            return;
-        }
-        if (!/^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$/.test(document.getElementById('username').value)) {
-            $(".valid_account").hide();
-            $(".invalid_account").show();
-            return;
-        }
-        // Skip captcha check for local testing
-        // if (!captchaSolved) {
-        //     $(".valid_account").hide();
-        //     $(".invalid_account").show();
-        //     return;
-        // }
-        if (!document.getElementById('accept-privacy-policy').checked) {
-            $(".valid_account").hide();
-            $(".invalid_account").show();
-            return;
-        }
-        $(".valid_account").show();
-        $(".invalid_account").hide();
-    }
 
-    var correctCaptcha = function(response) {
-        captchaSolved = true;
-        checkIfValidAccount();
-    };
+        [usernameInput, passwordInput, confirmInput, privacyCheckbox].forEach(function(element) {
+            element.addEventListener('input', updateState);
+            element.addEventListener('change', updateState);
+        });
+
+        updateState();
+    })();
 </script>
 
 <% include templates/globalScripts.ejs %>

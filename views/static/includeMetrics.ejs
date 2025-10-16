@@ -1,73 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="description" content="A description on how to include bStats to your plugin">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-    <title>bStats - Include metrics</title>
+    <meta charset="utf-8"/>
+    <meta name="description" content="How to add bStats metrics to your Minecraft plugin.">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>bStats — Include Metrics</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-
-    <style>
-        .withBox { outline: 1px solid #ccc; padding: 5px; margin: 5px; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/stylesheets/tailwind.css" rel="stylesheet" media="screen"/>
+    <link href="/stylesheets/style.css" rel="stylesheet" media="screen"/>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 antialiased">
 
 <% include ../templates/navigation.ejs %>
+
 <main>
-    <div class="container">
-        <br>
-        <% if (addedPlugin) { %>
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
-                    <b>You've successfully added your plugin!</b><br>
-                    If you haven't done it already, you have to add bStats to your plugin.<br>
-                </div>
-            </div>
+    <section class="relative isolate overflow-hidden">
+        <div class="absolute inset-0 -z-10 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+        <div class="absolute inset-x-0 top-[-20rem] -z-20 flex justify-center opacity-70 blur-3xl">
+            <div class="h-[28rem] w-[60rem] max-w-full" style="background: radial-gradient(circle at top, var(--accent-color) 0%, rgba(15,118,110,0) 65%);"></div>
         </div>
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
-                    <b>Useful Information</b><br>
-                    Your plugin <b><%= pluginName %></b> has the plugin id <b><%= pluginId %></b>.
-                    You will need it when adding bStats to your plugin.
-                    <br>
-                    You can view the ids of all your plugins by visiting the <a href="/what-is-my-plugin-id">What is my plugin id?</a> page.
-                </div>
+
+        <div class="mx-auto max-w-5xl px-6 py-24 sm:py-28 lg:py-32">
+            <div class="space-y-6 text-center">
+                <span class="accent-pill inline-flex text-xs font-semibold uppercase tracking-[0.3em]">Documentation</span>
+                <h1 class="text-4xl font-semibold tracking-tight text-white sm:text-5xl">Include bStats in your plugin</h1>
+                <p class="mx-auto max-w-3xl text-lg leading-7 text-slate-300">Choose between the Maven dependency or the single-file Metrics class to start sending anonymous usage data. Both approaches only take a couple of minutes.</p>
             </div>
-        </div>
-        <% } %>
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
-                    <p>Including bStats is very easy. There are basically two ways to include bStats:</p>
-                    <ul class="collapsible" data-collapsible="accordion">
+
+            <% if (addedPlugin) { %>
+            <div class="mt-12 rounded-3xl border border-emerald-400/30 bg-emerald-500/10 p-6 text-left text-sm leading-6 text-emerald-200 shadow-lg shadow-emerald-500/10 backdrop-blur">
+                <p class="font-semibold text-emerald-100">Plugin registered successfully!</p>
+                <p class="mt-3 text-emerald-200">Use plugin ID <span class="inline-flex items-center rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-100"><%= pluginId %></span> when instantiating bStats in <b><%= pluginName %></b>. You can recover IDs later on the <a href="/what-is-my-plugin-id" class="font-semibold underline decoration-emerald-400/60 decoration-2 underline-offset-4">What is my plugin id?</a> page.</p>
+            </div>
+            <% } %>
+
+            <div class="mt-16 grid gap-10 lg:grid-cols-2">
+                <article class="rounded-3xl border border-white/10 bg-slate-950/70 p-8 shadow-xl shadow-slate-950/30 backdrop-blur">
+                    <h2 class="text-xl font-semibold text-white">Option A — Maven (recommended)</h2>
+                    <p class="mt-4 text-sm leading-6 text-slate-300">Shade the official bStats artifact into your plugin. This keeps updates simple and avoids classpath conflicts.</p>
+                    <ol class="mt-6 space-y-4 text-sm text-slate-300">
                         <li>
-                            <div class="collapsible-header"><i class="material-icons">code</i>Using Maven to shade bStats</div>
-                            <div class="collapsible-body">
-                                <div style="margin-left: 10px; margin-top: 4px; margin-right: 10px;">
-                                    <b class="red-text">Note: You are expected to have a basic understanding on how to use Maven!</b><br>
-                                    <b>1. Include the dependency.</b><br>
-                                    There are 4 possible artifact ids: <i><b>bstats-bukkit</b></i>, <i><b>bstats-bungeecord</b></i>, <i><b>bstats-sponge</b></i>, and <i><b>bstats-velocity</b></i>.
-                                    <pre class="prettyprint withBox" style="border: none"><code class="language-xml">&lt;dependency&gt;
+                            <p class="font-semibold text-white">1. Add the dependency</p>
+                            <p class="mt-2">Choose the artifact for your platform: <code class="rounded bg-slate-900/60 px-1.5 py-0.5 text-xs">bstats-bukkit</code>, <code class="rounded bg-slate-900/60 px-1.5 py-0.5 text-xs">bstats-bungeecord</code>, <code class="rounded bg-slate-900/60 px-1.5 py-0.5 text-xs">bstats-sponge</code>, or <code class="rounded bg-slate-900/60 px-1.5 py-0.5 text-xs">bstats-velocity</code>.</p>
+                            <pre class="mt-3 overflow-x-auto rounded-2xl border border-white/10 bg-slate-950/80 p-4 text-xs leading-6 text-slate-200"><code>&lt;dependency&gt;
   &lt;groupId&gt;org.bstats&lt;/groupId&gt;
   &lt;artifactId&gt;bstats-bukkit&lt;/artifactId&gt;
   &lt;version&gt;3.0.2&lt;/version&gt;
   &lt;scope&gt;compile&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
-                                    <b>3. Shade bStats into your plugin.</b><br>
-                                    This step is very important. Shading means, that the necessary classes are copied into
-                                    your plugin when you compile it. It also relocates the class to an other package.
-                                    Make sure to change <i>your.package</i> to your own package! If you are using
-                                    Sponge, do <b>not</b> relocate the bStats class (just remove the
-                                    &lt;configuration&gt;...&lt;/configuration&gt; part).
-                                    <pre class="prettyprint withBox" style="border: none"><code class="language-xml">&lt;build&gt;
+                        </li>
+
+                        <li>
+                            <p class="font-semibold text-white">2. Shade and (optionally) relocate</p>
+                            <p class="mt-2">Copy the shade plugin snippet and replace <code class="rounded bg-slate-900/60 px-1.5 py-0.5 text-xs">your.package</code> with your base package. Sponge users should remove the relocation section.</p>
+                            <pre class="mt-3 overflow-x-auto rounded-2xl border border-white/10 bg-slate-950/80 p-4 text-xs leading-6 text-slate-200"><code>&lt;build&gt;
   &lt;plugins&gt;
     &lt;plugin&gt;
       &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
@@ -77,70 +66,7 @@
         &lt;relocations&gt;
           &lt;relocation&gt;
             &lt;pattern&gt;org.bstats&lt;/pattern&gt;
-            &lt;!-- Replace this with your package! --&gt;
-            &lt;shadedPattern&gt;your.package&lt;/shadedPattern&gt;
-          &lt;/relocation&gt;
-        &lt;/relocations&gt;
-      &lt;/configuration&gt;
-      &lt;executions&gt;
-        &lt;execution&gt;
-          &lt;phase&gt;package&lt;/phase&gt;
-          &lt;goals&gt;
-            &lt;goal&gt;shade&lt;/goal&gt;
-          &lt;/goals&gt;
-        &lt;/execution&gt;
-      &lt;/executions&gt;
-    &lt;/plugin&gt;
-  &lt;/plugins&gt;
-&lt;/build&gt;</code></pre>
-                                    <b>4. You're done!</b><br>
-                                    Your final pom.xml now may look like this:
-                                    <pre class="prettyprint withBox" style="border: none"><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-     xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-     xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-  &lt;groupId&gt;me.name&lt;/groupId&gt;
-  &lt;artifactId&gt;pluginname&lt;/artifactId&gt;
-  &lt;version&gt;1.0.0&lt;/version&gt;
-
-  &lt;repositories&gt;
-    &lt;repository&gt;
-      &lt;id&gt;spigot-repo&lt;/id&gt;
-      &lt;url&gt;https://hub.spigotmc.org/nexus/content/groups/public/&lt;/url&gt;
-    &lt;/repository&gt;
-  &lt;/repositories&gt;
-
-  &lt;dependencies&gt;
-    &lt;!-- Spigot as an example --&gt;
-    &lt;dependency&gt;
-      &lt;groupId&gt;org.spigotmc&lt;/groupId&gt;
-      &lt;artifactId&gt;spigot-api&lt;/artifactId&gt;
-      &lt;version&gt;LATEST&lt;/version&gt;
-      &lt;scope&gt;provided&lt;/scope&gt;
-    &lt;/dependency&gt;
-    &lt;!-- bStats --&gt;
-    &lt;dependency&gt;
-      &lt;groupId&gt;org.bstats&lt;/groupId&gt;
-      &lt;artifactId&gt;bstats-bukkit&lt;/artifactId&gt;
-      &lt;version&gt;3.0.2&lt;/version&gt;
-      &lt;scope&gt;compile&lt;/scope&gt;
-    &lt;/dependency&gt;
-  &lt;/dependencies&gt;
-
-  &lt;build&gt;
-    &lt;plugins&gt;
-      &lt;plugin&gt;
-        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-        &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;
-        &lt;version&gt;3.1.0&lt;/version&gt;
-        &lt;configuration&gt;
-          &lt;relocations&gt;
-            &lt;relocation&gt;
-              &lt;pattern&gt;org.bstats&lt;/pattern&gt;
-              &lt;shadedPattern&gt;me.name.util&lt;/shadedPattern&gt;
-            &lt;/relocation&gt;
+            &lt;shadedPattern&gt;your.package.bstats&lt;/shadedPattern&gt;
           &lt;/relocations&gt;
         &lt;/configuration&gt;
         &lt;executions&gt;
@@ -152,88 +78,104 @@
           &lt;/execution&gt;
         &lt;/executions&gt;
       &lt;/plugin&gt;
-    &lt;/plugins&gt;
-  &lt;/build&gt;
-
-&lt;/project&gt;</code></pre>
-                                </div>
-                            </div>
+    &lt;/plugin&gt;
+  &lt;/plugins&gt;
+&lt;/build&gt;</code></pre>
                         </li>
-                        <li>
-                            <div class="collapsible-header"><i class="material-icons">code</i>Manually copy the Metrics class</div>
-                            <div class="collapsible-body">
-                                <div style="margin-left: 10px; margin-top: 4px; margin-right: 10px;">
-                                    If you don't want to use Maven that's no problem. You can just copy and paste the required class into your project.
-                                    All classes can be found in the <a href="https://github.com/Bastian/bStats-Metrics/tree/single-file">GitHub repository</a>.<br>
-                                    Just copy the class fitting your server software.
-                                    Make sure to change the package from <i>org.bstats</i> to your own package.<br>
-                                    <div style="overflow-x:auto;">
-                                        <div style="min-width: 300px">
-                                            <table>
-                                                <thead>
-                                                <tr>
-                                                    <th data-field="id">Software</th>
-                                                    <th data-field="name">Standard</th>
-                                                </tr>
-                                                </thead>
+                    </ol>
+                    <p class="mt-6 text-sm leading-6 text-slate-300">Need a full example? <a href="https://bstats.org/resources/maven-example" target="_blank" rel="noopener" class="accent-text hover:opacity-80">Download a complete pom.xml</a> showing bStats alongside a Spigot dependency.</p>
+                </article>
 
-                                                <tbody>
-                                                <% for (var i = 0; i < software.length; i++) { %>
-                                                <% if (software[i].metricsClass !== null) { %>
-                                                <tr>
-                                                    <td><b><%= software[i].name %></b></td>
-                                                    <td><a href="<%= software[i].metricsClass %>" target="_blank">Metrics.java</a></td>
-                                                </tr>
-                                                <% } %>
-                                                <% } %>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+                <article class="rounded-3xl border border-white/10 bg-slate-950/70 p-8 shadow-xl shadow-slate-950/30 backdrop-blur">
+                    <h2 class="text-xl font-semibold text-white">Option B — Single Metrics class</h2>
+                    <p class="mt-4 text-sm leading-6 text-slate-300">Prefer a build-tool free approach? Copy the Metrics class for your target platform and drop it straight into your project.</p>
+
+                    <div class="mt-6 overflow-hidden rounded-2xl border border-white/10">
+                        <table class="w-full text-left text-sm text-slate-200">
+                            <thead class="bg-white/5 text-xs uppercase tracking-wide text-slate-400">
+                            <tr>
+                                <th class="px-4 py-3">Platform</th>
+                                <th class="px-4 py-3">Metrics class</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/10">
+                            <% for (var i = 0; i < software.length; i++) { %>
+                            <% if (software[i].metricsClass !== null) { %>
+                            <tr class="hover:bg-white/5">
+                                <td class="px-4 py-3 font-semibold text-white"><%= software[i].name %></td>
+                                <td class="px-4 py-3">
+                                    <a href="<%= software[i].metricsClass %>" target="_blank" rel="noopener" class="accent-text font-medium hover:opacity-80">Metrics.java</a>
+                                </td>
+                            </tr>
+                            <% } %>
+                            <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p class="mt-4 text-sm leading-6 text-slate-300">After copying the file, adjust the package declaration to match your project structure. Optional: use the <span class="font-semibold">lite</span> variant if you don’t plan to add custom charts.</p>
+                </article>
+            </div>
+
+            <div class="mt-16 rounded-3xl border border-white/10 bg-slate-950/60 p-8 shadow-xl shadow-slate-950/30 backdrop-blur">
+                <h2 class="text-2xl font-semibold text-white">Instantiate Metrics</h2>
+                <p class="mt-3 text-sm leading-6 text-slate-300">Once the dependency or Metrics class is available, wire it up inside your pluginʼs bootstrap method. Replace <code class="rounded bg-slate-900/60 px-1.5 py-0.5 text-xs">YOUR_PLUGIN_ID</code> with the value from your dashboard.</p>
+                <pre class="mt-6 overflow-x-auto rounded-2xl border border-white/10 bg-slate-950/80 p-4 text-xs leading-6 text-slate-200"><code>public final class ExamplePlugin extends JavaPlugin {
+    @Override
+    public void onEnable() {
+        int pluginId = YOUR_PLUGIN_ID;
+        Metrics metrics = new Metrics(this, pluginId);
+
+        // Optional: add custom charts
+        metrics.addCustomChart(new Metrics.SimplePie("server_software", () -&gt;
+            Bukkit.getVersion()
+        ));
+    }
+}</code></pre>
+                <p class="mt-4 text-sm leading-6 text-slate-300">Custom charts accept lambdas or suppliers so you can measure versions, toggles, commands used—anything that makes sense for your users.</p>
+            </div>
+
+            <div class="mt-16 grid gap-10 lg:grid-cols-2">
+                <article class="rounded-3xl border border-white/10 bg-slate-950/70 p-8 shadow-xl shadow-slate-950/30 backdrop-blur">
+                    <h3 class="text-xl font-semibold text-white">Examples on GitHub</h3>
+                    <p class="mt-3 text-sm leading-6 text-slate-300">Need inspiration? Every official Metrics class repo ships with a minimal plugin demonstrating integration and chart creation.</p>
+                    <div class="mt-4 overflow-hidden rounded-2xl border border-white/10">
+                        <table class="w-full text-left text-sm text-slate-200">
+                            <thead class="bg-white/5 text-xs uppercase tracking-wide text-slate-400">
+                            <tr>
+                                <th class="px-4 py-3">Platform</th>
+                                <th class="px-4 py-3">Example plugin</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/10">
+                            <% for (var i = 0; i < software.length; i++) { %>
+                            <% if (software[i].examplePlugin !== null) { %>
+                            <tr class="hover:bg-white/5">
+                                <td class="px-4 py-3 font-semibold text-white"><%= software[i].name %></td>
+                                <td class="px-4 py-3">
+                                    <a href="<%= software[i].examplePlugin %>" target="_blank" rel="noopener" class="accent-text font-medium hover:opacity-80">ExamplePlugin.java</a>
+                                </td>
+                            </tr>
+                            <% } %>
+                            <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+                <article class="rounded-3xl border border-white/10 bg-slate-950/70 p-8 shadow-xl shadow-slate-950/30 backdrop-blur">
+                    <h3 class="text-xl font-semibold text-white">Next steps</h3>
+                    <ul class="mt-4 space-y-3 text-sm leading-6 text-slate-300">
+                        <li><span class="font-semibold text-white">Custom charts:</span> Craft pies, bars, lines or drilldowns to highlight specific metrics. <a href="/help/custom-charts" class="accent-text hover:opacity-80">Read the guide</a>.</li>
+                        <li><span class="font-semibold text-white">REST API:</span> Pull raw data or embed charts elsewhere via the <a href="/help/rest-api" class="accent-text hover:opacity-80">public endpoints</a>.</li>
+                        <li><span class="font-semibold text-white">Need help?</span> Join the <a href="https://discord.gg/qTXtXuf" target="_blank" rel="noopener" class="accent-text hover:opacity-80">bStats Discord</a> for support and feedback.</li>
                     </ul>
-                    After adding the Metrics class to your plugin, you now have to create an instance of the class.
-                    How this is done depends on the server software you are using.<br>
-                    Just take a look at the examples for your server software:
-                    <table>
-                        <thead>
-                        <tr>
-                            <th data-field="id">Software</th>
-                            <th data-field="name">Example</th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        <% for (var i = 0; i < software.length; i++) { %>
-                        <% if (software[i].examplePlugin !== null) { %>
-                        <tr>
-                            <td><b><%= software[i].name %></b></td>
-                            <td><a href="<%= software[i].examplePlugin %>" target="_blank">ExamplePlugin.java</a></td>
-                        </tr>
-                        <% } %>
-                        <% } %>
-                        </tbody>
-                    </table>
-                    You may notice, that all examples also include a very basic example on how to use custom charts. You can
-                    find a detailed tutorial on how to use them <a href="/help/custom-charts">here</a>. If you don't need
-                    custom charts you can (but not have to) use the lite version of the Metrics class, too.
-                </div>
+                </article>
             </div>
         </div>
-
-    </div>
+    </section>
 </main>
+
 <% include ../templates/footer.ejs %>
-
-<!-- Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-<!-- Code prettify -->
-<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-
 <% include ../templates/globalScripts.ejs %>
 
 </body>

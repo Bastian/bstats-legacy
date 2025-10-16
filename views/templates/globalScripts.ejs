@@ -1,5 +1,9 @@
-<script type="application/javascript">
-    $(document).ready(function() {
-        $('.modal').modal();
-    });
+<script>
+(function() {
+    if (typeof window !== 'undefined' && typeof window.$ === 'function' && typeof window.$.fn !== 'undefined' && typeof window.$.fn.modal === 'function') {
+        window.$(function() {
+            window.$('.modal').modal();
+        });
+    }
+})();
 </script>
