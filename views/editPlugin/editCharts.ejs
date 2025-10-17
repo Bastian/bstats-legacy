@@ -1,71 +1,34 @@
-<% if (charts !== undefined && charts.length !== 0) { %>
-<h5 class="<%= customColor1 %>-text col s12 center-align">Edit charts</h5>
-<br><br>
-<ul id="chartsList" class="list-group collection col s12 z-depth-1 grey lighten-4">
+<% if (charts !== undefined && Object.keys(charts).length !== 0) { %>
+<div class="space-y-3">
+    <h2 class="doc-card-title">Existing charts</h2>
+    <p class="text-sm text-slate-600">Drag and drop to reorder. Delete charts you no longer need.</p>
+</div>
+<ul id="chartsList" class="space-y-3">
     <%
     var chartIdsSorted = Object.keys(charts).sort(function(a,b){return charts[a].position-charts[b].position});
     for (var i = 0; i < chartIdsSorted.length; i++) {
         var chartId = chartIdsSorted[i];
+        var chart = charts[chartId];
     %>
-    <li class="list-group-item collection-item grey lighten-4" id="listElement_<%= chartId %>">
-        <div>
-            <i class="material-icons left glyphicon-move">drag_handle</i><a href="/plugin/<%= softwareUrl %>/<%= plugin.name %>/<%= plugin.id %>/#<%= chartId %>"><b><%= charts[chartId].title %></b> (id: <%= chartId %>)</a>
-            <a href="javascript:showErrorModal('Not supported', 'Editing existing charts is not supported at the moment!')" class="secondary-content">
-                <i class="material-icons" title="Edit chart">build</i>
-            </a>
-            <% if (charts[chartId].isDefault) { %>
-            <a class="secondary-content">
-                <i class="material-icons grey-text" title="Delete chart">delete</i>&nbsp;&nbsp; <!-- Webdesign like a pro -->
-            </a>
-            <% } else { %>
-            <a href="javascript:deleteChart('<%= chartId %>')" class="secondary-content">
-                <i class="material-icons red-text" title="Delete chart">delete</i>&nbsp;&nbsp; <!-- Webdesign like a pro -->
-            </a>
+    <li id="listElement_<%= chartId %>" class="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+        <div class="flex items-center gap-3 min-w-0">
+            <span class="sortable-handle cursor-grab text-slate-400">☰</span>
+            <div class="min-w-0">
+                <a href="/plugin/<%= softwareUrl %>/<%= plugin.name %>/<%= plugin.id %>/#<%= chartId %>" class="block truncate font-semibold text-slate-900 hover:text-brand-600">
+                    <%= chart.title %>
+                </a>
+                <p class="text-xs uppercase tracking-[0.18em] text-slate-400">ID: <%= chartId %></p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="/plugin/<%= softwareUrl %>/<%= plugin.name %>/<%= plugin.id %>/#<%= chartId %>" class="text-sm font-semibold text-brand-600 hover:text-brand-700">View</a>
+            <% if (!chart.isDefault) { %>
+            <button type="button" class="text-sm font-semibold text-rose-600 hover:text-rose-700" data-delete-chart="<%= chartId %>">Delete</button>
             <% } %>
         </div>
     </li>
     <% } %>
 </ul>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.4.2/Sortable.min.js"></script>
-<script type="application/javascript">
-    function deleteChart(chartId) {
-        // TODO use a modal for the confirmation, because it's fancy
-        if (confirm("Are you sure you want to delete the chart with id " + chartId)) {
-            $.post(window.location.pathname, {
-                action: 'deleteChart',
-                chartId: chartId
-            }).done(function(data) {
-                $('#listElement_' + chartId).remove();
-            }).fail(function(err) {
-                    if (err.responseJSON.error === undefined) {
-                        showErrorModal('Ooops', 'Something happened, which should not happen. Please report this bug.');
-                    } else {
-                        showErrorModal('Error', err.responseJSON.error + '.');
-                    }
-                    console.log(err);
-                }
-            );
-        }
-    }
-
-    Sortable.create(chartsList, {
-        animation: 150,
-        handle: '.glyphicon-move',
-        onEnd: function (event) {
-            if (event.oldIndex === event.newIndex) {
-                return;
-            }
-            if (event.oldIndex === undefined || event.newIndex === undefined) {
-                return;
-            }
-            console.log('Moved chart from ' + event.oldIndex + ' to ' + event.newIndex);
-            $.post(window.location.pathname, {
-                action: 'reorderCharts',
-                oldIndex: event.oldIndex,
-                newIndex: event.newIndex
-            });
-        }
-    });
-</script>
+<% } else { %>
+<p class="text-sm text-slate-500">You haven’t added any charts yet. Create one to see it listed here.</p>
 <% } %>

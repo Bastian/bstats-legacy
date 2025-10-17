@@ -6,149 +6,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>bStats - Register</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/main.css" />
 
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
 
 <% include templates/navigation.ejs %>
-<main>
-    <div class="container">
-        <br><br>
-        <div class="hide-on-med-and-down"><br><br></div>
-        <div class="row">
-            <% if (failed) { %>
-            <h5 class="red-text col s12 center-align">There's already an account with this name!</h5>
-            <% } else if (wrongCaptcha) { %>
-            <h5 class="red-text col s12 center-align">Please solve the captcha!</h5>
-            <% } else { %>
-            <h5 class="<%= customColor1 %>-text col s12 center-align">Register an account</h5>
-            <% } %>
-            <br><br>
-            <div class="col s12 m8 l6 offset-m2 offset-l3 z-depth-1 grey lighten-4 row">
-                <form class="col s12" method="post">
-                    <br>
-                    <!-- Name -->
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="username" type="text" name="username"
-                                   pattern="^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$" length="32" class="validate">
-                            <label for="username" data-error="Invalid username">Name</label>
-                        </div>
-                    </div>
-                    <!-- Password -->
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="password" type="password" name="password">
-                            <label for="password">Password</label>
-                        </div>
-                    </div>
-                    <!-- Password confirm -->
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="password_confirm" type="password">
-                            <label for="password_confirm">Confirm password</label>
-                            <font class="red-text please_confirm" style="display: none;">Passwords do not match!</font>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-left: 0">
-                        <p>
-                            <input type="checkbox" id="accept-privacy-policy"/>
-                            <label for="accept-privacy-policy">Accept <a href="/privacy-policy">privacy policy</a></label>
-                        </p>
-                    </div>
-                    <div style="text-align: center">
-                        <div class="g-recaptcha" style="display: inline-block"
-                             data-sitekey="<%= publicKey %>" data-callback="correctCaptcha"></div>
-                    </div>
-                    <br/>
-                    <!-- Register button -->
-                    <div class='row'>
-                        <a class='col s12 btn btn-large waves-effect <%= customColor1 %> disabled invalid_account'>Register</a>
-                        <button type='submit' name='btn_register' class='col s12 btn btn-large waves-effect <%= customColor1 %> valid_account' style="display: none;">
-                            Register
-                        </button>
-                    </div>
-                </form>
+<main class="pb-24">
+    <section class="doc-hero">
+        <div class="doc-container py-16 sm:py-20">
+            <div class="max-w-xl space-y-4">
+                <span class="badge bg-brand-100 text-brand-700">Account</span>
+                <h1 class="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">Create an account</h1>
+                <p class="text-base leading-relaxed text-slate-600">
+                    Register once to manage metrics, publish custom charts, and keep tabs on adoption.
+                </p>
             </div>
-
-            <a href="/login" class="col s12 center-align">Already have an account? Login!</a>
         </div>
-    </div>
+    </section>
+
+    <section class="doc-container mt-12">
+        <div class="form-card space-y-6">
+            <% if (failed) { %>
+            <div class="doc-callout border-rose-200 bg-rose-50 text-rose-700">
+                This username is already taken. Choose another one to continue.
+            </div>
+            <% } else if (wrongCaptcha) { %>
+            <div class="doc-callout border-amber-200 bg-amber-50 text-amber-700">
+                Please solve the captcha to prove you are not a robot.
+            </div>
+            <% } %>
+
+            <form id="registerForm" method="post" class="space-y-5">
+                <div class="form-field">
+                    <label class="form-label" for="username">Username</label>
+                    <input id="username" type="text" name="username" autocomplete="username"
+                           pattern="^[-_a-zA-Z0-9]+(\\s[-_a-zA-Z0-9]+)*$" maxlength="32"
+                           class="form-input" required>
+                    <p class="form-helper">Letters, numbers, underscores. Spaces allowed between words.</p>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="password">Password</label>
+                    <input id="password" type="password" name="password" autocomplete="new-password" class="form-input" required>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="password_confirm">Confirm password</label>
+                    <input id="password_confirm" type="password" autocomplete="new-password" class="form-input" required>
+                    <p id="passwordMismatch" class="form-error hidden">Passwords do not match.</p>
+                </div>
+
+                <label class="flex items-start gap-3 text-sm text-slate-600">
+                    <input type="checkbox" id="accept-privacy-policy" class="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+                    <span>I accept the <a class="font-semibold text-brand-600 hover:text-brand-700" href="/privacy-policy">privacy policy</a>.</span>
+                </label>
+
+                <div class="flex justify-center">
+                    <div class="g-recaptcha" data-sitekey="<%= publicKey %>" data-callback="correctCaptcha"></div>
+                </div>
+
+                <button id="registerButton" type="submit" name="btn_register"
+                        class="btn-primary w-full justify-center disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled>
+                    Create account
+                </button>
+            </form>
+
+            <p class="text-center text-sm text-slate-500">
+                Already have an account?
+                <a class="font-semibold text-brand-600 hover:text-brand-700" href="/login">Sign in</a>.
+            </p>
+        </div>
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
 
-<!-- Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('password_confirm');
+        const privacyCheckbox = document.getElementById('accept-privacy-policy');
+        const registerButton = document.getElementById('registerButton');
+        const passwordMismatch = document.getElementById('passwordMismatch');
+        const usernamePattern = /^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$/;
+        let captchaSolved = false;
 
-<script type="application/javascript">
-    $(document).on('input','#password',function () {
-        checkIfValidAccount();
-        checkPasswords();
+        function passwordsMatch() {
+            return password.value === confirmPassword.value;
+        }
+
+        function isValidUsername() {
+            return usernamePattern.test(username.value);
+        }
+
+        function isFormValid() {
+            return password.value.length > 0 &&
+                passwordsMatch() &&
+                isValidUsername() &&
+                captchaSolved &&
+                privacyCheckbox.checked;
+        }
+
+        function updateState() {
+            if (passwordsMatch()) {
+                passwordMismatch.classList.add('hidden');
+            } else if (confirmPassword.value.length > 0) {
+                passwordMismatch.classList.remove('hidden');
+            } else {
+                passwordMismatch.classList.add('hidden');
+            }
+
+            registerButton.disabled = !isFormValid();
+        }
+
+        username.addEventListener('input', updateState);
+        password.addEventListener('input', updateState);
+        confirmPassword.addEventListener('input', updateState);
+        privacyCheckbox.addEventListener('change', updateState);
+
+        window.correctCaptcha = function () {
+            captchaSolved = true;
+            updateState();
+        };
+
+        updateState();
     });
-    $(document).on('input','#password_confirm',function () {
-        checkIfValidAccount();
-        checkPasswords();
-    });
-    $(document).on('input','#username',function () {
-        checkIfValidAccount();
-    });
-
-    $(document).on('input','#accept-privacy-policy',function () {
-        checkIfValidAccount();
-    });
-    captchaSolved = false;
-
-    function checkPasswords() {
-        if (document.getElementById('password').value === document.getElementById('password_confirm').value) {
-            $(".please_confirm").hide();
-        } else {
-            $(".please_confirm").show();
-        }
-    }
-
-    function checkIfValidAccount() {
-        if (document.getElementById('password').value !== document.getElementById('password_confirm').value) {
-            $(".valid_account").hide();
-            $(".invalid_account").show();
-            return;
-        }
-        if (1 > document.getElementById('password').value.length) {
-            $(".valid_account").hide();
-            $(".invalid_account").show();
-            return;
-        }
-        if (!/^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$/.test(document.getElementById('username').value)) {
-            $(".valid_account").hide();
-            $(".invalid_account").show();
-            return;
-        }
-        if (!captchaSolved) {
-            $(".valid_account").hide();
-            $(".invalid_account").show();
-            return;
-        }
-        if (!document.getElementById('accept-privacy-policy').checked) {
-            $(".valid_account").hide();
-            $(".invalid_account").show();
-            return;
-        }
-        $(".valid_account").show();
-        $(".invalid_account").hide();
-    }
-
-    var correctCaptcha = function(response) {
-        captchaSolved = true;
-        checkIfValidAccount();
-    };
 </script>
 
 <% include templates/globalScripts.ejs %>

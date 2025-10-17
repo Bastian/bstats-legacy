@@ -1,91 +1,124 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="description" content="bStats collects data for plugin authors. It's free and easy to use!">
+    <meta name="description" content="Browse plugins reporting to bStats.">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>bStats - Plugin list</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <link href="/stylesheets/dataTablesMaterialDesign.css" type="text/css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
 
 <% include templates/navigation.ejs %>
-<main>
-    <div class="container">
-        <br><br>
-        <!-- Search form -->
-        <div class="input-field">
-            <i class="material-icons prefix grey-text text-darken-2" style="margin-top: 10px">search</i>
-            <input id="searchTable" type="text">
-            <label for="searchTable">Search plugins</label>
-        </div>
-        <!-- Datatables design by Azamat Mukhiddinov (http://codepen.io/azamatms/pen/ZGwOMM/) -->
-        <div class="row">
-            <div id="admin" class="col s12">
-                <div class="card material-table">
-                    <div class="table-header">
-                        <span class="table-title">Plugin List</span>
-                    </div>
-                    <div style="overflow-x:auto;">
-                        <div style="min-width: 650px">
-                            <table id="pluginList">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Software</th>
-                                    <th>Owner</th>
-                                    <th>Servers</th>
-                                    <th>Players</th>
-                                </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+<main class="pb-24">
+    <section class="doc-hero">
+        <div class="doc-container py-16 sm:py-20">
+            <div class="max-w-3xl space-y-4">
+                <span class="badge bg-brand-100 text-brand-700">Directory</span>
+                <h1 class="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">Plugin list</h1>
+                <p class="text-base leading-relaxed text-slate-600">
+                    Search thousands of plugins reporting metrics to bStats. Sort by servers, players, and software to spot what’s trending.
+                </p>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="doc-container mt-12 space-y-6">
+        <div class="grid gap-4 lg:flex lg:items-end lg:justify-between">
+            <div class="input-group lg:w-80">
+                <label class="input-label" for="pluginSearch">Search</label>
+                <input id="pluginSearch" type="text" class="input-control" placeholder="Filter by name, owner, or software">
+            </div>
+            <div class="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-slate-400">
+                <span id="pluginCount">&nbsp;</span>
+            </div>
+        </div>
+
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200 text-sm">
+                    <thead class="bg-slate-100 text-slate-500">
+                    <tr>
+                        <th class="px-4 py-3 text-left font-semibold uppercase tracking-[0.18em]">Name</th>
+                        <th class="px-4 py-3 text-left font-semibold uppercase tracking-[0.18em]">Software</th>
+                        <th class="px-4 py-3 text-left font-semibold uppercase tracking-[0.18em]">Owner</th>
+                        <th class="px-4 py-3 text-right font-semibold uppercase tracking-[0.18em]">Servers</th>
+                        <th class="px-4 py-3 text-right font-semibold uppercase tracking-[0.18em]">Players</th>
+                    </tr>
+                    </thead>
+                    <tbody id="pluginTableBody" class="divide-y divide-slate-200 text-slate-700">
+                    <tr>
+                        <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">Loading plugins…</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
 
-<!--  Scripts-->
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="/javascripts/dataTablesMaterialDesign.js"></script>
+<script>
+    $(function () {
+        const tableBody = $('#pluginTableBody');
+        const searchInput = $('#pluginSearch');
+        const pluginCount = $('#pluginCount');
+        const formatter = new Intl.NumberFormat();
+        let plugins = [];
 
-<script type="application/javascript">
+        function render(list) {
+            tableBody.empty();
+            if (!list.length) {
+                tableBody.append('<tr><td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">No plugins match your search.</td></tr>');
+                pluginCount.text('0 plugins');
+                return;
+            }
+            list.forEach(function (plugin) {
+                const row = $('<tr>').addClass('hover:bg-slate-50 transition-colors');
+                row.append($('<td>').addClass('px-4 py-3 font-semibold text-slate-900').text(plugin.name));
+                row.append($('<td>').addClass('px-4 py-3 text-slate-600').text(plugin.softwareName));
+                row.append($('<td>').addClass('px-4 py-3 text-slate-600').text(plugin.ownerName));
+                row.append($('<td>').addClass('px-4 py-3 text-right font-semibold text-slate-900').text(formatter.format(plugin.servers || 0)));
+                row.append($('<td>').addClass('px-4 py-3 text-right font-semibold text-slate-900').text(formatter.format(plugin.players || 0)));
+                tableBody.append(row);
+            });
+            pluginCount.text(list.length + (list.length === 1 ? ' plugin' : ' plugins'));
+        }
 
-    $(document).on('input','#searchTable',function () {
-        var table = $('#pluginList').DataTable();
-        table.search(document.getElementById('searchTable').value).draw();
+        function filterPlugins() {
+            const query = searchInput.val().trim().toLowerCase();
+            if (!query) {
+                render(plugins);
+                return;
+            }
+            const filtered = plugins.filter(function (plugin) {
+                return (
+                    plugin.name.toLowerCase().includes(query) ||
+                    plugin.softwareName.toLowerCase().includes(query) ||
+                    plugin.ownerName.toLowerCase().includes(query)
+                );
+            });
+            render(filtered);
+        }
+
+        $.getJSON('/api/v1/datatable')
+            .done(function (data) {
+                plugins = data || [];
+                plugins.sort(function (a, b) { return (b.servers || 0) - (a.servers || 0); });
+                render(plugins);
+            })
+            .fail(function () {
+                tableBody.html('<tr><td colspan="5" class="px-4 py-6 text-center text-sm text-rose-600">Failed to load plugins. Please try again later.</td></tr>');
+            });
+
+        searchInput.on('input', filterPlugins);
     });
-
-    $(document).ready(function() {
-        $('#pluginList').DataTable( {
-            processing: true,
-            ajax: {
-                url: '/api/v1/datatable',
-                dataSrc: '',
-                cache: true
-            },
-            columns: [
-                { data: 'name' },
-                { data: 'softwareName' },
-                { data: 'ownerName' },
-                { data: 'servers' },
-                { data: 'players' }
-            ],
-            order: [[3, 'desc']]
-        } );
-    } );
 </script>
 
 <% include templates/globalScripts.ejs %>

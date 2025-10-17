@@ -1,44 +1,12 @@
-<h5 class="<%= customColor1 %>-text col s12 center-align">Delete plugin</h5>
-<br><br>
-<div class="col s12 z-depth-1 grey lighten-4 row">
-    <br>
-    <div class="input-field">
-        <input placeholder="Please type in the name of the plugin to confirm." id="confirm_plugin_name" class="validate"
-               pattern="^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$" length="<%= plugin.name.length %>" type="text" name="pluginName">
-        <label for="confirm_plugin_name">Plugin name</label>
+<div class="space-y-3">
+    <h2 class="doc-card-title">Delete plugin</h2>
+    <p class="text-sm leading-relaxed text-slate-600">
+        This permanently removes the plugin and all associated metrics. Type the plugin name to confirm.
+    </p>
+    <div class="input-group">
+        <label class="input-label" for="confirm_plugin_name">Plugin name</label>
+        <input id="confirm_plugin_name" type="text" class="input-control" placeholder="<%= plugin.name %>">
+        <p class="form-helper">Enter “<%= plugin.name %>” to enable the delete button.</p>
     </div>
-    <br>
-    <div class="col s12">
-        <div class='row'>
-            <button type='submit' id='delete_button' class='col s12 l6 offset-l3 disabled waves-effect waves-light btn-large red' onclick="deletePlugin()">
-                Delete
-            </button>
-        </div>
-    </div>
+    <button id="delete_button" type="button" class="btn-primary w-full justify-center opacity-50 cursor-not-allowed" disabled>Delete plugin</button>
 </div>
-
-<script type="application/javascript">
-    $(document).on('input','#confirm_plugin_name',function () {
-        var name = document.getElementById('confirm_plugin_name').value;
-        if (name !== "<%= plugin.name %>") {
-            $("#delete_button").addClass("disabled");
-        } else {
-            $("#delete_button").removeClass("disabled");
-        }
-    });
-
-    function deletePlugin() {
-        $.post(window.location.href, {action: 'deletePlugin'})
-            .done(function(data) {
-                window.location.href = "/";
-            }).fail(function(err) {
-                if (err.responseJSON.error === undefined) {
-                    showErrorModal('Ooops', 'Something happened, which should not happen. Please report this bug.');
-                } else {
-                    showErrorModal('Error', err.responseJSON.error + '.');
-                }
-                console.log(err);
-            }
-        );
-    }
-</script>

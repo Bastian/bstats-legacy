@@ -1,77 +1,35 @@
-<div class="depending_box single_linechart">
-    <div id="single_linechart_form" class="col s12">
-        <!-- Chart title -->
-        <br>
-        <div class="input-field">
-            <input placeholder="The title of the chart" id="chart_title_single_linechart" type="text" class="validate"
-                   pattern="^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$" length="32" name="chartTitle">
-            <label for="chart_title_single_linechart">Chart title</label>
+<div data-chart-form="single_linechart" class="hidden space-y-5">
+    <div class="space-y-2">
+        <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Single line chart</h3>
+        <p class="text-sm text-slate-600">Plot a single metric across time—perfect for players, servers, or any rolling counter.</p>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+        <div class="input-group">
+            <label class="input-label" for="chart_title_single_linechart">Chart title</label>
+            <input id="chart_title_single_linechart" type="text" class="input-control" maxlength="32" required>
         </div>
-        <!-- Chart id -->
-        <div class="input-field">
-            <input placeholder="Give the chart an unique id (e.g. 'myChart1')" id="chart_id_single_linechart" class="validate"
-                   pattern="^[-_a-zA-Z0-9]+([-_a-zA-Z0-9]+)*$" length="32" type="text" name="chartId">
-            <label for="chart_id_single_linechart">Chart id</label>
-        </div>
-        <!-- Line name -->
-        <div class="input-field">
-            <input placeholder="The name of the line (e.g. 'Players')" id="line_name_single_linechart" class="validate"
-                   pattern="^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$" length="50" type="text" name="lineName">
-            <label for="line_name_single_linechart">Line name</label>
-        </div>
-        <!-- Filter on/off -->
-        <div class="divider"></div>
-        <br>
-        <div class="switch">
-            <b>Filter data</b>
-            <label>
-                <input class="checkboxFilter" type="checkbox" name="filterEnabled">
-                <span class="lever"></span>
-            </label>
-        </div>
-        <br>
-        <div class="filterOptions">
-            <!-- Regex on/off -->
-            <div class="divider"></div>
-            <br>
-            <div class="input-field">
-                <input placeholder="Leave empty for no filtering" type="text" class="validate"
-                       pattern="^[0-9]*$" length="16" name="maxValue" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
-                <label for="maxValue">Max value</label>
-            </div>
-            <br>
-            <div class="input-field">
-                <input placeholder="Leave empty for no filtering" type="text" class="validate"
-                       pattern="^[0-9]*$" length="16" name="minValue" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
-                <label for="minValue">Min value</label>
-            </div>
-        </div>
-        <!-- Submit button -->
-        <div class='row'>
-            <button type='submit' name='btn_submit' class='col s12 l6 offset-l3 btn btn-large waves-effect <%= customColor1 %>' onclick="createSingleLineChart()">
-                Submit Chart
-            </button>
+        <div class="input-group">
+            <label class="input-label" for="chart_id_single_linechart">Chart ID</label>
+            <input id="chart_id_single_linechart" type="text" class="input-control" maxlength="32" required>
         </div>
     </div>
+    <div class="input-group">
+        <label class="input-label" for="line_name_single_linechart">Line name</label>
+        <input id="line_name_single_linechart" type="text" class="input-control" maxlength="50" placeholder="Players" required>
+    </div>
+    <label class="flex items-center gap-2 text-sm text-slate-600">
+        <input type="checkbox" id="singleLineFilterEnabled" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+        <span>Limit values</span>
+    </label>
+    <div class="grid gap-4 sm:grid-cols-2">
+        <div class="input-group">
+            <label class="input-label" for="singleLineMinValue">Minimum value</label>
+            <input id="singleLineMinValue" type="number" min="0" class="input-control" placeholder="Optional">
+        </div>
+        <div class="input-group">
+            <label class="input-label" for="singleLineMaxValue">Maximum value</label>
+            <input id="singleLineMaxValue" type="number" min="0" class="input-control" placeholder="Optional">
+        </div>
+    </div>
+    <button type="button" id="createSingleLineChart" class="btn-primary w-full justify-center">Create chart</button>
 </div>
-
-<script type="application/javascript">
-    $(document).on('input','#chart_title_single_linechart',function () {
-        document.getElementById('chart_id_single_linechart').value = $('#chart_title_single_linechart').val().toLowerCase().replace(/ /g, "_");
-    });
-
-    function createSingleLineChart() {
-        let currentForm = $('#single_linechart_form');
-        addChart({
-            chartTitle: $("#chart_title_single_linechart").val(),
-            chartId: $("#chart_id_single_linechart").val(),
-            lineName: $("#line_name_single_linechart").val(),
-            filterEnabled: currentForm.find('input[name="filterEnabled"]').is(":checked"),
-            mixValue: currentForm.find('input[name="minValue"]').val(),
-            maxValue: currentForm.find('input[name="maxValue"]').val(),
-            regexEnabled: currentForm.find('input[name="regexEnabled"]').is(":checked"),
-            blacklistEnabled: currentForm.find('input[name="blacklistEnabled"]').is(":checked"),
-            chart_type: 'single_linechart'
-        });
-    }
-</script>

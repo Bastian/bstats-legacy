@@ -1,33 +1,91 @@
 $(function () {
-    $.getJSON('/api/v1/plugins/' + getPluginId() + '/charts', function (charts) { // Get all charts of the plugin
-        for (var chart in charts) {
-            if (!charts.hasOwnProperty(chart)) {
+    var renderedCharts = {};
+    var chartsCache = null;
+
+    function getContainerId(chartId, type) {
+        switch (type) {
+            case 'single_linechart':
+                return chartId + 'LineChart';
+            case 'simple_map':
+            case 'advanced_map':
+                return chartId + 'Map';
+            case 'simple_bar':
+            case 'advanced_bar':
+                return chartId + 'Bar';
+            case 'simple_pie':
+            case 'advanced_pie':
+            case 'drilldown_pie':
+            default:
+                return chartId + 'Pie';
+        }
+    }
+
+    function renderCharts(charts, attempt) {
+        if (!charts) {
+            return;
+        }
+        attempt = attempt || 0;
+        var hasMissingContainer = false;
+
+        for (var chartId in charts) {
+            if (!charts.hasOwnProperty(chartId) || renderedCharts[chartId]) {
                 continue;
             }
-            switch (charts[chart].type) {
+
+            var chart = charts[chartId];
+            var containerId = getContainerId(chartId, chart.type);
+            if (!document.getElementById(containerId)) {
+                hasMissingContainer = true;
+                continue;
+            }
+
+            renderedCharts[chartId] = true;
+
+            switch (chart.type) {
                 case 'simple_pie':
                 case 'advanced_pie':
-                    handlePieChart(chart, charts[chart]);
+                    handlePieChart(chartId, chart);
                     break;
                 case 'drilldown_pie':
-                    handleDrilldownPieChart(chart, charts[chart]);
+                    handleDrilldownPieChart(chartId, chart);
                     break;
                 case 'single_linechart':
-                    handleLineChart(chart, charts[chart]);
+                    handleLineChart(chartId, chart);
                     break;
                 case 'simple_bar':
                 case 'advanced_bar':
-                    handleBarChart(chart, charts[chart]);
+                    handleBarChart(chartId, chart);
                     break;
                 case 'simple_map':
                 case 'advanced_map':
-                    handleMapChart(chart, charts[chart]);
+                    handleMapChart(chartId, chart);
                     break;
                 default:
                     break;
             }
         }
+
+        if (hasMissingContainer && attempt < 25) {
+            setTimeout(function () {
+                renderCharts(charts, attempt + 1);
+            }, 100);
+        }
+    }
+
+    $(document).on('bstats:charts-shell-ready', function (event, charts) {
+        chartsCache = charts;
+        renderCharts(chartsCache);
     });
+
+    if (!window.__bstatsCustomLayout) {
+        $.getJSON('/api/v1/plugins/' + getPluginId() + '/charts', function (charts) {
+            chartsCache = charts;
+            renderCharts(chartsCache);
+        });
+    } else if (window.__bstatsCharts) {
+        chartsCache = window.__bstatsCharts;
+        renderCharts(chartsCache);
+    }
 });
 
 function handlePieChart(chartId, chart) {
@@ -67,7 +125,7 @@ function handlePieChart(chartId, chart) {
                 type: 'pie'
             },
             title: {
-                text: '<a href="#' + chartId + '" style="text-decoration: none; color: inherit;">' + chart.title + '</a>'
+                text: null
             },
             tooltip: {
                 headerFormat: '<span style="font-size: 18px"><u><b>{point.key}</b></u></span><br/>',
@@ -138,7 +196,7 @@ function handleDrilldownPieChart(chartId, chart) {
                 type: 'pie'
             },
             title: {
-                text: '<a href="#' + chartId + '" style="text-decoration: none; color: inherit;">' + chart.title + '</a>'
+                text: null
             },
             subtitle: {
                 text: 'Click the slices to view details.'
@@ -185,6 +243,60 @@ function handleLineChart(chartId, chart) {
         } else if (chartId === 'servers') {
             updateServersBadge(data);
         }
+
+        var rangeButtons = [{
+            type: 'day',
+            count: 1,
+            text: '1d'
+        }, {
+            type: 'day',
+            count: 3,
+            text: '3d'
+        }, {
+            type: 'week',
+            count: 1,
+            text: '1w'
+        }, {
+            type: 'month',
+            count: 1,
+            text: '1m'
+        }, {
+            type: 'month',
+            count: 6,
+            text: '6m'
+        }, {
+            type: 'year',
+            count: 1,
+            text: '1y'
+        }, {
+            type: 'all',
+            text: 'All'
+        }];
+
+        if (isMobile) {
+            rangeButtons = [{
+                type: 'day',
+                count: 1,
+                text: '1d'
+            }, {
+                type: 'week',
+                count: 1,
+                text: '1w'
+            }, {
+                type: 'month',
+                count: 1,
+                text: '1m'
+            }, {
+                type: 'all',
+                text: 'All'
+            }];
+        }
+
+        var baseButtonTheme = Highcharts.getOptions().rangeSelector.buttonTheme || {};
+        var buttonTheme = Highcharts.merge(baseButtonTheme, {
+            width: isMobile ? 38 : 48
+        });
+
         $('#' + chartId + 'LineChart').highcharts('StockChart', {
 
             chart:{
@@ -192,34 +304,9 @@ function handleLineChart(chartId, chart) {
             },
 
             rangeSelector: {
-                buttons: [{
-                    type: 'day',
-                    count: 1,
-                    text: '1d'
-                }, {
-                    type: 'day',
-                    count: 3,
-                    text: '3d'
-                }, {
-                    type: 'week',
-                    count: 1,
-                    text: '1w'
-                }, {
-                    type: 'month',
-                    count: 1,
-                    text: '1m'
-                }, {
-                    type: 'month',
-                    count: 6,
-                    text: '6m'
-                }, {
-                    type: 'year',
-                    count: 1,
-                    text: '1y'
-                }, {
-                    type: 'all',
-                    text: 'All'
-                }],
+                buttons: rangeButtons,
+                buttonTheme: buttonTheme,
+                buttonSpacing: 4,
                 selected: 3,
                 inputEnabled: false
             },
@@ -262,7 +349,7 @@ function handleLineChart(chartId, chart) {
             },
 
             title : {
-                text : '<a href="#' + chartId + '" style="text-decoration: none; color: inherit;">' + chart.title + '</a>'
+                text : null
             },
 
             plotOptions:{
@@ -294,7 +381,7 @@ function handleBarChart(chartId, chart) {
                 height: data.length * chart.data.barNames.length * (30 + chart.data.barNames.length * 15) + 120 // 20px per data item plus top and bottom margins
             },
             title: {
-                text: '<a href="#' + chartId + '" style="text-decoration: none; color: inherit;">' + chart.title + '</a>'
+                text: null
             },
             plotOptions: {
                 bar: {
@@ -356,7 +443,7 @@ function handleMapChart(chartId, chart) {
         $('#' + chartId + 'Map').highcharts('Map', {
 
             title: {
-                text: '<a href="#' + chartId + '" style="text-decoration: none; color: inherit;">' + chart.title + '</a>'
+                text: null
             },
 
             legend: {

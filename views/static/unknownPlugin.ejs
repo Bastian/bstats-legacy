@@ -6,40 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>bStats - Unknown plugin</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/main.css" />
 </head>
 <body>
 
 <% include ../templates/navigation.ejs %>
-<main>
-    <div class="container">
-
-        <div class="section no-pad-bot" id="index-banner">
-            <div class="container">
-                <br><br>
-                <h1 class="header center <%= customColor1 %>-text">Unknown plugin! :(</h1>
-                <div class="row center">
-                    <h5 class="header col s12 light">Sorry but we don't have stats about
-                        <div class="truncate"><%= pluginName %></div>
-                    </h5>
-                    <img src="/images/homer.png" alt="Doh!" style="width: 75%; height: 75%">
+<main class="pb-24">
+    <section class="doc-hero">
+        <div class="doc-container py-16 sm:py-20">
+            <div class="max-w-3xl space-y-4 text-center">
+                <span class="badge bg-brand-100 text-brand-700">Unknown plugin</span>
+                <h1 class="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">We couldn't find it</h1>
+                <p class="text-base leading-relaxed text-slate-600">
+                    Sorry, we don't have any stats about <span class="font-semibold text-slate-900"><%= pluginName %></span>.
+                    Maybe it hasn’t been registered yet or the name is spelled differently.
+                </p>
+                <div class="mt-6 flex flex-wrap justify-center gap-3">
+                    <a href="/plugin-list" class="btn-primary px-5 py-3 text-sm">Browse plugin list</a>
+                    <a href="/add-plugin" class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:border-brand-200 hover:text-brand-700">Register plugin</a>
                 </div>
             </div>
         </div>
+    </section>
 
-    </div>
+    <section class="doc-container mt-12">
+        <div class="doc-card text-center">
+            <p class="text-sm text-slate-600">Here’s a friendly image while you double-check the name:</p>
+            <img class="mx-auto mt-6 w-full max-w-sm rounded-2xl border border-slate-200" src="/images/homer.png" alt="Doh!" loading="lazy">
+        </div>
+    </section>
 </main>
+
 <% include ../templates/footer.ejs %>
-
-<!-- Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-
 <% include ../templates/globalScripts.ejs %>
 
 </body>

@@ -6,79 +6,280 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>bStats - Edit <%= plugin.name %></title>
 
-    <!-- CSS -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-
-    <!-- Scripts (Pls don't punch me, that it's in the head) -->
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-
-    <style type="text/css">
-        .depending_box {
-            display: none;
-        }
-        .blacklistLabel {
-            display: none;
-        }
-        .filterOptions {
-            display: none;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js" integrity="sha512-JqNplLWYwgd0CQpZK0s8AjtKoa6HgMHqmpYyqn1nVbWcv16O3MHuvb6jVWeItPxX2VINeodIZ6Tn6PvxI6Bjqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
 <% include templates/navigation.ejs %>
-<main>
+<main class="pb-24">
     <% if (!(isOwner || (user !== undefined && user.admin))) { %>
-    <% include editPlugin/notOwner.ejs %>
+    <section class="doc-hero">
+        <div class="doc-container py-16 sm:py-20">
+            <div class="max-w-2xl space-y-4">
+                <span class="badge bg-brand-100 text-brand-700">Edit access</span>
+                <h1 class="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">Nice try!</h1>
+                <p class="text-base leading-relaxed text-slate-600">
+                    Only the owner of <span class="font-semibold text-slate-900"><%= plugin.name %></span> can edit this plugin.
+                    Reach out to <a class="font-semibold text-brand-600 hover:text-brand-700" href="/author/<%= plugin.owner %>"><%= plugin.owner %></a> if you'd like to collaborate.
+                </p>
+            </div>
+        </div>
+    </section>
     <% } else { %>
-    <br><br>
-    <div class="container row">
-        <% include editPlugin/addChart.ejs %>
-        <% include editPlugin/editCharts.ejs %>
-        <% include editPlugin/deletePlugin.ejs %>
-        <% if (user.admin) { %>
-        <% include editPlugin/transferOwnership.ejs %>
-        <% } %>
-    </div>
+    <section class="doc-hero">
+        <div class="doc-container py-16 sm:py-20">
+            <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                <div class="space-y-4">
+                    <span class="badge bg-brand-100 text-brand-700">Plugin</span>
+                    <h1 class="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl"><%= plugin.name %></h1>
+                    <p class="text-base leading-relaxed text-slate-600">
+                        Manage charts, transfers, and cleanup for your plugin. Changes appear instantly on the public dashboard.
+                    </p>
+                    <div class="flex flex-wrap gap-3 text-sm text-slate-500">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm">
+                            <span class="h-2 w-2 rounded-full bg-brand-500"></span>
+                            Owner: <%= plugin.owner %>
+                        </span>
+                        <span class="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm">
+                            Plugin ID: <%= plugin.id %>
+                        </span>
+                    </div>
+                </div>
+                <a href="/plugin/<%= softwareUrl %>/<%= plugin.name %>/<%= plugin.id %>" class="btn-primary w-full justify-center px-5 py-3 text-sm sm:w-auto">
+                    View public page
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="doc-container mt-12 space-y-8">
+        <div id="editFeedback" class="hidden rounded-2xl border px-4 py-4 text-sm sm:px-5 sm:py-5">
+            <span id="editFeedbackText"></span>
+            <a id="editFeedbackLink" class="ml-2 font-semibold text-brand-600 hover:text-brand-700 hidden" href="#" target="_blank" rel="noopener">View chart</a>
+        </div>
+
+        <div class="grid gap-8 lg:grid-cols-2">
+            <article class="doc-card space-y-6">
+                <% include editPlugin/addChart.ejs %>
+            </article>
+
+            <article class="doc-card space-y-4">
+                <% include editPlugin/editCharts.ejs %>
+            </article>
+
+            <article class="doc-card space-y-4">
+                <% include editPlugin/deletePlugin.ejs %>
+            </article>
+
+            <% if (user.admin) { %>
+            <article class="doc-card space-y-4">
+                <% include editPlugin/transferOwnership.ejs %>
+            </article>
+            <% } %>
+        </div>
+    </section>
     <% } %>
 </main>
 
-<!-- Error modal -->
-<div id="errorModal" class="modal">
-    <div class="modal-content">
-        <h4 class="red-text" id="errorModalTitle"></h4>
-        <p id="errorModalText"></p>
-    </div>
-    <div class="modal-footer">
-        <b><a href="#" class="modal-action modal-close waves-effect waves-red btn-flat grey-text">Ok</a></b>
-    </div>
-</div>
-
 <% include templates/footer.ejs %>
 
-<!-- Scripts -->
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.4.2/Sortable.min.js"></script>
+<script>
+    $(function () {
+        const chartForms = $('[data-chart-form]');
+        const selectChart = $('#select_chart');
+        const feedback = $('#editFeedback');
+        const feedbackText = $('#editFeedbackText');
+        const feedbackLink = $('#editFeedbackLink');
 
-<script type="application/javascript">
-    $(document).ready(function() {
-        $('select').material_select();
+        function showFeedback(kind, message, link) {
+            feedback.removeClass('hidden border-emerald-200 bg-emerald-50 text-emerald-700 border-rose-200 bg-rose-50 text-rose-700');
+            if (kind === 'error') {
+                feedback.addClass('border-rose-200 bg-rose-50 text-rose-700');
+            } else {
+                feedback.addClass('border-emerald-200 bg-emerald-50 text-emerald-700');
+            }
+            feedbackText.text(message);
+            if (link) {
+                feedbackLink.removeClass('hidden').attr('href', link);
+            } else {
+                feedbackLink.addClass('hidden').attr('href', '#');
+            }
+        }
+
+        function parseValues(text) {
+            return text.split(/\r?\n/).map(function (line) { return line.trim(); }).filter(Boolean);
+        }
+
+        function addChartRequest(payload) {
+            payload.action = 'addChart';
+            $.post(window.location.href, payload)
+                .done(function () {
+                    showFeedback('success', 'Chart “' + payload.chartTitle + '” created successfully.', '/plugin/<%= softwareUrl %>/<%= plugin.name %>/<%= plugin.id %>#' + payload.chartId);
+                })
+                .fail(function (err) {
+                    const message = err.responseJSON && err.responseJSON.error ? err.responseJSON.error : 'Something went wrong. Please try again.';
+                    showFeedback('error', message);
+                });
+        }
+
+        selectChart.on('change', function () {
+            const selected = this.value;
+            chartForms.addClass('hidden');
+            chartForms.filter('[data-chart-form="' + selected + '"]').removeClass('hidden');
+        });
+
+        $('[data-filter-toggle]').on('change', function () {
+            const target = $($(this).data('target'));
+            target.toggleClass('hidden', !this.checked);
+        });
+
+        $('#chart_title_simple_pie').on('input', function () {
+            $('#chart_id_simple_pie').val($(this).val().toLowerCase().replace(/\s+/g, '_'));
+        });
+        $('#chart_title_advanced_pie').on('input', function () {
+            $('#chart_id_advanced_pie').val($(this).val().toLowerCase().replace(/\s+/g, '_'));
+        });
+        $('#chart_title_drilldown_pie').on('input', function () {
+            $('#chart_id_drilldown_pie').val($(this).val().toLowerCase().replace(/\s+/g, '_'));
+        });
+        $('#chart_title_single_linechart').on('input', function () {
+            $('#chart_id_single_linechart').val($(this).val().toLowerCase().replace(/\s+/g, '_'));
+        });
+
+        $('#createSimplePie').on('click', function () {
+            addChartRequest({
+                chart_title: $('#chart_title_simple_pie').val(),
+                chartTitle: $('#chart_title_simple_pie').val(),
+                chartId: $('#chart_id_simple_pie').val(),
+                filterEnabled: $('#simplePieFilterEnabled').is(':checked'),
+                filter: parseValues($('#simplePieFilterValues').val()),
+                regexEnabled: $('#simplePieRegex').is(':checked'),
+                blacklistEnabled: $('#simplePieFilterMode').val() === 'blacklist',
+                chart_type: 'simple_pie'
+            });
+        });
+
+        $('#createAdvancedPie').on('click', function () {
+            addChartRequest({
+                chart_title: $('#chart_title_advanced_pie').val(),
+                chartTitle: $('#chart_title_advanced_pie').val(),
+                chartId: $('#chart_id_advanced_pie').val(),
+                maxValue: $('#advancedPieMaxValue').val(),
+                filterEnabled: $('#advancedPieFilterEnabled').is(':checked'),
+                filter: parseValues($('#advancedPieFilterValues').val()),
+                regexEnabled: $('#advancedPieRegex').is(':checked'),
+                blacklistEnabled: $('#advancedPieFilterMode').val() === 'blacklist',
+                chart_type: 'advanced_pie'
+            });
+        });
+
+        $('#createDrilldownPie').on('click', function () {
+            addChartRequest({
+                chart_title: $('#chart_title_drilldown_pie').val(),
+                chartTitle: $('#chart_title_drilldown_pie').val(),
+                chartId: $('#chart_id_drilldown_pie').val(),
+                maxValue: $('#drilldownPieMaxValue').val(),
+                filterEnabled: $('#drilldownPieFilterEnabled').is(':checked'),
+                filter: parseValues($('#drilldownPieFilterValues').val()),
+                regexEnabled: $('#drilldownPieRegex').is(':checked'),
+                blacklistEnabled: $('#drilldownPieFilterMode').val() === 'blacklist',
+                chart_type: 'drilldown_pie'
+            });
+        });
+
+        $('#createSingleLineChart').on('click', function () {
+            addChartRequest({
+                chart_title: $('#chart_title_single_linechart').val(),
+                chartTitle: $('#chart_title_single_linechart').val(),
+                chartId: $('#chart_id_single_linechart').val(),
+                lineName: $('#line_name_single_linechart').val(),
+                minValue: $('#singleLineMinValue').val(),
+                maxValue: $('#singleLineMaxValue').val(),
+                filterEnabled: $('#singleLineFilterEnabled').is(':checked'),
+                chart_type: 'single_linechart'
+            });
+        });
+
+        const confirmInput = $('#confirm_plugin_name');
+        const deleteButton = $('#delete_button');
+        confirmInput.on('input', function () {
+            const matches = $(this).val().trim() === '<%= plugin.name %>';
+            deleteButton.prop('disabled', !matches);
+            deleteButton.toggleClass('opacity-50 cursor-not-allowed', !matches);
+        });
+        deleteButton.on('click', function () {
+            if ($(this).prop('disabled')) {
+                return;
+            }
+            if (confirm('Delete plugin "<%= plugin.name %>"? This cannot be undone.')) {
+                $.post(window.location.href, { action: 'deletePlugin' })
+                    .done(function () {
+                        window.location.href = '/';
+                    })
+                    .fail(function (err) {
+                        const message = err.responseJSON && err.responseJSON.error ? err.responseJSON.error : 'Something went wrong.';
+                        showFeedback('error', message);
+                    });
+            }
+        });
+
+        $('#transfer_button').on('click', function () {
+            const newOwner = $('#new_owner').val().trim();
+            if (!newOwner) {
+                showFeedback('error', 'Please enter a username to transfer ownership.');
+                return;
+            }
+            $.post(window.location.href, { action: 'transferOwnership', newOwner: newOwner })
+                .done(function () {
+                    showFeedback('success', 'Ownership transferred to ' + newOwner + '.');
+                })
+                .fail(function (err) {
+                    const message = err.responseJSON && err.responseJSON.error ? err.responseJSON.error : 'Transfer failed.';
+                    showFeedback('error', message);
+                });
+        });
+
+        const chartsList = document.getElementById('chartsList');
+        if (chartsList) {
+            Sortable.create(chartsList, {
+                animation: 150,
+                handle: '.sortable-handle',
+                onEnd: function (event) {
+                    if (event.oldIndex === event.newIndex) {
+                        return;
+                    }
+                    $.post(window.location.pathname, {
+                        action: 'reorderCharts',
+                        oldIndex: event.oldIndex,
+                        newIndex: event.newIndex
+                    });
+                }
+            });
+        }
+
+        $('#chartsList').on('click', '[data-delete-chart]', function () {
+            const chartId = $(this).data('delete-chart');
+            if (!chartId) {
+                return;
+            }
+            if (confirm('Delete chart "' + chartId + '"?')) {
+                $.post(window.location.pathname, { action: 'deleteChart', chartId: chartId })
+                    .done(function () {
+                        $('#listElement_' + chartId).remove();
+                        showFeedback('success', 'Chart "' + chartId + '" deleted.');
+                    })
+                    .fail(function (err) {
+                        const message = err.responseJSON && err.responseJSON.error ? err.responseJSON.error : 'Failed to delete chart.';
+                        showFeedback('error', message);
+                    });
+            }
+        });
     });
-
-    $('.chips').material_chip({
-        placeholder: 'Add an other value',
-        secondaryPlaceholder: 'Add entry'
-    });
-
-    function showErrorModal(title, text) {
-        $('#errorModalTitle').text(title);
-        $('#errorModalText').text(text);
-        $('#errorModal').modal('open');
-    }
 </script>
 
 <% include templates/globalScripts.ejs %>

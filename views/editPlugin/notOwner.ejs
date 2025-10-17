@@ -1,15 +1,13 @@
-<div class="container">
-
-    <div class="section no-pad-bot" id="index-banner">
-        <div class="container">
-            <br><br>
-            <h1 class="header center <%= customColor1 %>-text">Nice try!</h1>
-            <div class="row center">
-                <h5 class="header col s12 light">You are not the owner of
-                    <div class="truncate"><%= plugin.name %></div>
-                </h5>
-            </div>
+<section class="doc-hero">
+    <div class="doc-container py-16 sm:py-20">
+        <div class="max-w-2xl space-y-4">
+            <span class="badge bg-brand-100 text-brand-700">Edit access</span>
+            <h1 class="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">Nice try!</h1>
+            <p class="text-base leading-relaxed text-slate-600">
+                You are not the owner of <span class="font-semibold text-slate-900"><%= plugin.name %></span>.
+                Only <a class="font-semibold text-brand-600 hover:text-brand-700" href="/author/<%= plugin.owner %>"><%= plugin.owner %></a>
+                or a site administrator can modify this plugin.
+            </p>
         </div>
     </div>
-
-</div>
+</section>

@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<!-- Note: IntelliJ has problems with width, ... in jQuery .html() -->
-<!--suppress CssUnknownProperty -->
 <html lang="en">
 <head>
     <!-- Twitter stuff -->
@@ -15,148 +13,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>bStats - <%= plugin.name %></title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/main.css" />
 
-    <!-- Flags for the map -->
     <link rel="stylesheet" type="text/css" href="https://cloud.github.com/downloads/lafeber/world-flags-sprite/flags32.css" />
 
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
-
 <body>
 <% include templates/navigation.ejs %>
-<main>
-    <div class="section no-pad-bot" id="index-banner">
-        <div class="container">
-            <br><br>
-            <h1 class="header center <%= customColor1 %>-text truncate">
-                <%= plugin.name %>
-                <% if (isOwner || (user != null && user.admin)) { %>
-                <a href="/editPlugin/<%= software.url %>/<%= plugin.name %>/<%= plugin.id %>"><sup><i title="Edit plugin settings" class="material-icons small">build</i></sup></a>
-                <% } %>
-            </h1>
-            <div class="row center">
-                <h5 class="header col s12 light authorbox">by <a class="<%= customColor1 %>-text text-darken-2" href="/author/<%= plugin.owner %>"><%= plugin.owner %></a></h5>
+
+<main class="pb-24">
+    <section class="relative overflow-hidden border-b border-slate-200 bg-gradient-to-br from-brand-50 via-white to-sky-100">
+        <div class="absolute left-1/2 top-[-12rem] h-96 w-96 -translate-x-1/2 rounded-full bg-brand-200/60 blur-3xl"></div>
+        <div class="absolute right-[-10rem] top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-sky-200/60 blur-3xl"></div>
+        <div class="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+            <div class="flex flex-col gap-10 lg:flex-row lg:items-start">
+                <div class="max-w-3xl">
+                    <span class="badge bg-brand-100 text-brand-700"><%= software.name %></span>
+                    <div class="mt-6 flex items-center gap-4">
+                        <h1 class="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+                            <%= plugin.name %>
+                        </h1>
+                        <% if (isOwner || (user != null && user.admin)) { %>
+                        <a href="/editPlugin/<%= software.url %>/<%= plugin.name %>/<%= plugin.id %>" class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-600 transition hover:border-brand-300 hover:text-brand-700">
+                            Edit
+                        </a>
+                        <% } %>
+                    </div>
+                    <div class="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-500">
+                        <span>
+                            by <a class="font-semibold text-brand-600 hover:text-brand-700" href="/author/<%= plugin.owner %>"><%= plugin.owner %></a>
+                        </span>
+                        <span class="hidden h-1 w-1 rounded-full bg-slate-300 sm:inline-block"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 grid gap-4 sm:grid-cols-2">
+                <article class="rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm min-w-0">
+                    <span class="text-[11px] uppercase tracking-[0.25em] text-slate-400">Servers</span>
+                    <div class="mt-4 flex items-baseline gap-2">
+                        <span id="serversCurrent" class="font-display text-4xl font-semibold text-slate-900">--</span>
+                        <span class="text-[11px] uppercase tracking-[0.2em] text-slate-400">current</span>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-500">
+                        <span class="uppercase tracking-[0.18em]">record</span>
+                        <span id="serversRecord" class="font-semibold text-slate-600">--</span>
+                    </div>
+                </article>
+                <article class="rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm min-w-0">
+                    <span class="text-[11px] uppercase tracking-[0.25em] text-slate-400">Players</span>
+                    <div class="mt-4 flex items-baseline gap-2">
+                        <span id="playersCurrent" class="font-display text-4xl font-semibold text-slate-900">--</span>
+                        <span class="text-[11px] uppercase tracking-[0.2em] text-slate-400">current</span>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-500">
+                        <span class="uppercase tracking-[0.18em]">record</span>
+                        <span id="playersRecord" class="font-semibold text-slate-600">--</span>
+                    </div>
+                </article>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="row">
-        <div class="col s12 m6 l4 offset-l2">
-            <div class="card-panel <%= customColor1 %>">
-                <span class="white-text"><i class="material-icons left">storage</i><b id="serversBadge">Servers (Current/Record): loading...</b></span>
-            </div>
+    <section class="mx-auto mt-16 max-w-6xl px-4 sm:px-6">
+        <div class="flex flex-col gap-3 sm:gap-2">
+            <h2 class="font-display text-3xl font-semibold text-slate-900">Live charts</h2>
+            <p class="text-sm text-slate-500">Hover, zoom, and drill into the data. Updated every 30 minutes.</p>
         </div>
-        <div class="col s12 m6 l4">
-            <div class="card-panel <%= customColor1 %>">
-                <span class="white-text"><i class="material-icons left">people</i><b id="playersBadge">Players (Current/Record): loading...</b></span>
-            </div>
+        <div id="charts" class="mt-8 grid gap-8 md:grid-cols-2"></div>
+
+        <div class="mt-14 rounded-3xl border border-slate-200 bg-white/80 p-6 text-sm text-slate-500 shadow-sm">
+            Charts powered by <a class="font-semibold text-brand-600 hover:text-brand-700" href="https://www.highcharts.com/" target="_blank" rel="noopener">Highcharts</a>
         </div>
-    </div>
-    <br><br>
-
-    <div id="charts" class="row">
-        <!-- Charts get added afterwards using jQuery -->
-    </div>
-
-    <div class="center">
-        Charts powered by <a href="http://highcharts.com">Highcharts</a>
-        <br/>
-        <br/>
-    </div>
-
-    <script type="application/javascript">
-        $.getJSON('/api/v1/plugins/<%= plugin.id %>/charts', function (charts) {
-            var chartIdsSorted = Object.keys(charts).sort(function(a,b){return charts[a].position-charts[b].position});
-            var previousRowWasFull = true;
-            for (var i = 0; i < chartIdsSorted.length; i++) {
-                var chartId = chartIdsSorted[i];
-                if (!charts.hasOwnProperty(chartId)) {
-                    continue;
-                }
-                var chart = charts[chartId];
-
-                var nextChartIsCompleteRow = true;
-                if (chartIdsSorted.length > i + 1) {
-                    var nextChartId = chartIdsSorted[i + 1];
-                    if (charts.hasOwnProperty(nextChartId)) {
-                        var nextChart = charts[nextChartId];
-                        switch (nextChart.type) {
-                            case 'simple_pie':
-                            case 'advanced_pie':
-                            case 'drilldown_pie':
-                                nextChartIsCompleteRow = false;
-                                break;
-                            case 'single_linechart':
-                            case 'simple_map':
-                            case 'advanced_map':
-                            case 'simple_bar':
-                            case 'advanced_bar':
-                                nextChartIsCompleteRow = true;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-
-                var jQueryChart = $('#charts');
-                switch (chart.type) {
-                    case 'simple_pie':
-                    case 'advanced_pie':
-                    case 'drilldown_pie':
-                        var colWidth = "s12 m12 l12 xl12";
-                        if (previousRowWasFull && nextChartIsCompleteRow) {
-                            colWidth = "s12 m12 l12 xl12";
-                            previousRowWasFull = true;
-                        } else if (!previousRowWasFull) {
-                            colWidth = "s12 m6 l6 xl5";
-                            previousRowWasFull = true;
-                        } else if (!nextChartIsCompleteRow) {
-                            colWidth = "s12 m6 l6 xl5 offset-xl1";
-                            previousRowWasFull = false;
-                        }
-                        jQueryChart.html(jQueryChart.html() + '<div id="' + chartId + '" class="col ' + colWidth + '"><div id="' + chartId + 'Pie" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div></div>');
-                        break;
-                    case 'single_linechart':
-                        jQueryChart.html(jQueryChart.html() + '<div id="' + chartId + '" class="col s12"><div id="' + chartId + 'LineChart" class="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div><br><br></div>');
-                        previousRowWasFull = true;
-                        break;
-                    case 'simple_map':
-                    case 'advanced_map':
-                        jQueryChart.html(jQueryChart.html() + '<div id="' + chartId + '" class="col s12"><div id="' + chartId + 'Map" class="container" style="min-width: 310px; height: 600px; margin: 0 auto"></div><br><br></div>');
-                        previousRowWasFull = true;
-                        break;
-                    case 'simple_bar':
-                    case 'advanced_bar':
-                        jQueryChart.html(jQueryChart.html() + '<div id="' + chartId + '" class="col s12"><div id="' + chartId + 'Bar" class="container" style="min-width: 310px; margin: 0 auto"></div><br><br></div>');
-                        previousRowWasFull = true;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if (window.location.hash) { // Scroll to anchor
-                $('html,body').animate({
-                    scrollTop: $(window.location.hash).offset().top
-                }, 2000);
-            }
-        });
-    </script>
-
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
 
 <!-- Scripts -->
-
-<!-- Materialize -->
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-<!-- Charts -->
 <script src="https://code.highcharts.com/stock/6.0.1/highstock.js"></script>
 <script src="https://code.highcharts.com/maps/6.0.1/modules/map.js"></script>
 <script src="https://code.highcharts.com/6.0.1/modules/exporting.js"></script>
@@ -165,28 +103,173 @@
 <script src="https://code.highcharts.com/maps/6.0.1/modules/data.js"></script>
 <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
 <script src="/javascripts/charts/themes/chartTheme.js"></script>
+<script>
+    window.__bstatsCustomLayout = true;
+</script>
 <script src="/javascripts/charts/charts.js"></script>
-<script type="application/javascript">
+<script>
+    (function () {
+        const numberFormatter = new Intl.NumberFormat();
+
+        function formatValue(value) {
+            if (value === undefined || value === null || isNaN(value)) {
+                return '--';
+            }
+            return numberFormatter.format(value);
+        }
+
+        function updateMetricCard(containerId, current, record) {
+            $('#' + containerId + 'Current').text(formatValue(current));
+            $('#' + containerId + 'Record').text(formatValue(record));
+        }
+
+        function calculateRecord(data) {
+            return data.reduce((acc, point) => Math.max(acc, point[1]), 0);
+        }
+
+        window.updatePlayersBadge = function (data) {
+            if (!Array.isArray(data) || !data.length) {
+                return;
+            }
+            const current = data[data.length - 1][1];
+            const record = calculateRecord(data);
+            updateMetricCard('players', current, record);
+        };
+
+        window.updateServersBadge = function (data) {
+            if (!Array.isArray(data) || !data.length) {
+                return;
+            }
+            const current = data[data.length - 1][1];
+            const record = calculateRecord(data);
+            updateMetricCard('servers', current, record);
+        };
+
+        const chartGrid = $('#charts');
+        window.__bstatsCharts = window.__bstatsCharts || null;
+        const chartHeights = {
+            pie: '18rem',
+            line: '24rem',
+            map: '30rem',
+            bar: '24rem'
+        };
+
+        function createChartCard(chartId, chart) {
+            let colSpanClass = 'col-span-1';
+            let heightKey = 'pie';
+            let suffix = 'Pie';
+            switch (chart.type) {
+                case 'single_linechart':
+                    colSpanClass = 'col-span-1 md:col-span-2';
+                    heightKey = 'line';
+                    suffix = 'LineChart';
+                    break;
+                case 'simple_map':
+                case 'advanced_map':
+                    colSpanClass = 'col-span-1 md:col-span-2';
+                    heightKey = 'map';
+                    suffix = 'Map';
+                    break;
+                case 'simple_bar':
+                case 'advanced_bar':
+                    colSpanClass = 'col-span-1 md:col-span-2';
+                    heightKey = 'bar';
+                    suffix = 'Bar';
+                    break;
+                case 'simple_pie':
+                case 'advanced_pie':
+                case 'drilldown_pie':
+                default:
+                    colSpanClass = 'col-span-1';
+                    heightKey = 'pie';
+                    suffix = 'Pie';
+                    break;
+            }
+
+            const card = $('<article>', {
+                id: chartId,
+                class: colSpanClass + ' rounded-2xl border border-slate-200 bg-white shadow-sm min-w-0'
+            });
+
+            const header = $('<div>', {
+                class: 'flex items-start justify-between gap-4 px-5 pt-5'
+            });
+
+            const meta = $('<div>').addClass('flex flex-col gap-2');
+            meta.append($('<h3>', {
+                class: 'font-display text-lg font-semibold text-slate-900',
+                text: chart.title
+            }));
+            header.append(meta);
+
+            const permalink = $('<a>', {
+                href: '#' + chartId,
+                class: 'inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-500 transition hover:border-slate-300 hover:text-slate-600'
+            }).append(
+                $('<span>').text('Permalink'),
+                $('<svg>', {
+                    class: 'h-4 w-4 text-current',
+                    viewBox: '0 0 24 24',
+                    fill: 'none',
+                    xmlns: 'http://www.w3.org/2000/svg'
+                }).append(
+                    $('<path>', {
+                        d: 'M13 4h7v7M11 13l9-9M11 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5',
+                        stroke: 'currentColor',
+                        'stroke-width': '1.5',
+                        'stroke-linecap': 'round',
+                        'stroke-linejoin': 'round'
+                    })
+                )
+            );
+            header.append(permalink);
+
+            const body = $('<div>', { class: 'px-5 pb-6 pt-4' });
+            const chartSurface = $('<div>', {
+                class: 'overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-2 sm:p-3 min-w-0'
+            });
+            const chartContainer = $('<div>', {
+                id: chartId + suffix,
+                class: 'w-full',
+                css: { minHeight: chartHeights[heightKey] || '24rem' }
+            });
+            chartSurface.append(chartContainer);
+            body.append(chartSurface);
+            card.append(header, body);
+            return { card, suffix };
+        }
+
+        $.getJSON('/api/v1/plugins/<%= plugin.id %>/charts', function (charts) {
+            const chartIds = Object.keys(charts).sort(function (a, b) {
+                return charts[a].position - charts[b].position;
+            });
+
+            chartIds.forEach(function (chartId) {
+                if (!charts.hasOwnProperty(chartId)) {
+                    return;
+                }
+                const chart = charts[chartId];
+                const { card } = createChartCard(chartId, chart);
+                chartGrid.append(card);
+            });
+
+            window.__bstatsCharts = charts;
+            $(document).trigger('bstats:charts-shell-ready', [charts]);
+
+            if (window.location.hash) {
+                const target = $(window.location.hash);
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 120
+                    }, 800);
+                }
+            }
+        });
+    })();
+</script>
+<script>
     function getPluginId() {
         return "<%= plugin.id %>";
-    }
-
-    function updatePlayersBadge(data) {
-        let current = data[data.length-1][1];
-        let record = 0;
-        for (let i = 0; i < data.length; i++) {
-            record = data[i][1] > record ? data[i][1] : record;
-        }
-        $('#playersBadge').html(`Players (Current/Record): ${current} / ${record}`);
-    }
-
-    function updateServersBadge(data) {
-        let current = data[data.length-1][1];
-        let record = 0;
-        for (let i = 0; i < data.length; i++) {
-            record = data[i][1] > record ? data[i][1] : record;
-        }
-        $('#serversBadge').html(`Servers (Current/Record): ${current} / ${record}`);
     }
 </script>
 

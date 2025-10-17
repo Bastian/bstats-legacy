@@ -6,94 +6,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>bStats - Add plugin</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-
-    <style>
-        body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-
-        main {
-            flex: 1 0 auto;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
-
 <body>
 
 <% include templates/navigation.ejs %>
-<main>
-    <div class="container">
-        <br><br>
-        <div class="hide-on-med-and-down"><br><br></div>
-        <div class="row">
-            <% if (failed) { %>
-            <h5 class="red-text col s12 center-align">Something went wrong on our side :(</h5>
-            <% } else if (alreadyAdded) { %>
-            <h5 class="red-text col s12 center-align">Plugin already added!</h5>
-            <% } else if (wrongCaptcha) { %>
-            <h5 class="red-text col s12 center-align">Please solve the captcha!</h5>
-            <% } else { %>
-            <h5 class="<%= customColor1 %>-text col s12 center-align">Add plugin</h5>
-            <% } %>
-            <br><br>
-            <div class="col s12 m8 l6 offset-m2 offset-l3 z-depth-1 grey lighten-4 row">
-                <form class="col s12" method="post">
-                    <br>
-                    <div class="row">
-                        <!-- Server software -->
-                        <div class="input-field col s12">
-                            <select id="software" name="software">
-                                <option value="" disabled selected>Select software</option>
-                                <% for (var i = 0; i < allSoftware.length; i++) { %>
-                                <% if (allSoftware[i].globalPlugin || (user != null && user.admin)) { %>
-                                <option value="<%= allSoftware[i].id %>"><%= allSoftware[i].name %></option>
-                                <% } %>
-                                <% } %>
-                            </select>
-                            <label>Select server software</label>
-                        </div>
-                        <!-- Name -->
-                        <div class="input-field col s12">
-                            <input id="pluginName" type="text" name="pluginName"
-                                   pattern="^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$" length="32" class="validate">
-                            <label for="pluginName" data-error="Invalid plugin name">Plugin name</label>
-                        </div>
-                    </div>
-                    <div style="text-align: center">
-                        <div class="g-recaptcha" style="display: inline-block"
-                             data-sitekey="<%= publicKey %>"></div>
-                    </div>
-                    <br/>
-                    <!-- Add plugin button -->
-                    <div class='row'>
-                        <button type='submit' name='btn_add_plugin' class='col s12 btn btn-large waves-effect <%= customColor1 %>'>
-                            Add plugin
-                        </button>
-                    </div>
-                </form>
+<main class="pb-24">
+    <section class="doc-hero">
+        <div class="doc-container py-16 sm:py-20">
+            <div class="max-w-2xl space-y-4">
+                <span class="badge bg-brand-100 text-brand-700">Account</span>
+                <h1 class="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">Register a plugin</h1>
+                <p class="text-base leading-relaxed text-slate-600">
+                    Pick the server software, choose a display name, and we’ll generate a plugin ID. You’ll use that ID when instantiating the Metrics class.
+                </p>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="doc-container mt-12">
+        <div class="form-card space-y-6">
+            <% if (failed) { %>
+            <div class="doc-callout border-rose-200 bg-rose-50 text-rose-700">Something went wrong on our side. Please try again.</div>
+            <% } else if (alreadyAdded) { %>
+            <div class="doc-callout border-rose-200 bg-rose-50 text-rose-700">You already added this plugin.</div>
+            <% } else if (wrongCaptcha) { %>
+            <div class="doc-callout border-amber-200 bg-amber-50 text-amber-700">Please solve the captcha to continue.</div>
+            <% } %>
+
+            <form method="post" class="space-y-5" id="addPluginForm">
+                <div class="input-group">
+                    <label class="input-label" for="software">Server software</label>
+                    <select id="software" name="software" class="input-control" required>
+                        <option value="" disabled selected>Select software</option>
+                        <% for (var i = 0; i < allSoftware.length; i++) { %>
+                        <% if (allSoftware[i].globalPlugin || (user != null && user.admin)) { %>
+                        <option value="<%= allSoftware[i].id %>"><%= allSoftware[i].name %></option>
+                        <% } %>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="pluginName">Plugin name</label>
+                    <input id="pluginName" type="text" name="pluginName" maxlength="32"
+                           pattern="^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$" class="input-control" placeholder="My Awesome Plugin" required>
+                    <p class="form-helper">Letters, numbers, underscores. Spaces allowed between words.</p>
+                </div>
+
+                <div class="flex justify-center">
+                    <div class="g-recaptcha" data-sitekey="<%= publicKey %>" data-callback="captchaSolved"></div>
+                </div>
+
+                <button id="addPluginButton" type="submit" name="btn_add_plugin" class="btn-primary w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Add plugin
+                </button>
+            </form>
+        </div>
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
 
-<!-- Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
+<script>
+    $(function () {
+        const softwareSelect = $('#software');
+        const pluginInput = $('#pluginName');
+        const submitButton = $('#addPluginButton');
+        let captchaComplete = false;
 
-<script type="application/javascript">
-    $(document).ready(function() {
-        $('select').material_select();
+        function validateForm() {
+            const softwareSelected = softwareSelect.val();
+            const nameValid = pluginInput[0].checkValidity();
+            submitButton.prop('disabled', !(softwareSelected && nameValid && captchaComplete));
+        }
+
+        softwareSelect.on('change', validateForm);
+        pluginInput.on('input', validateForm);
+
+        window.captchaSolved = function () {
+            captchaComplete = true;
+            validateForm();
+        };
+
+        validateForm();
     });
 </script>
 

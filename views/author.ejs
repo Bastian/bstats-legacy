@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
-    <!-- Twitter stuff -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@btobastian" />
     <meta name="twitter:title" content="<%= username %> | bStats" />
@@ -11,70 +10,90 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="description" content="bStats collects data for plugin authors. It's free and easy to use!">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-    <title>bStats - <% username %></title>
+    <title>bStats - <%= username %></title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <link href="/stylesheets/dataTablesMaterialDesign.css" type="text/css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
 
 <% include templates/navigation.ejs %>
-<main>
-    <div class="section no-pad-bot" id="index-banner">
-        <div class="container">
-            <br><br>
-            <h1 class="header center <%= customColor1 %>-text truncate"><%= username %></h1>
-            <div class="row center">
-                <h5 class="header col s12 light">Here are all the plugins created by <%= username %></h5>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <br><br>
-        <div class="row">
-            <div id="admin" class="col s12">
-                <div class="card material-table">
-                    <div style="overflow-x:auto;">
-                        <div style="min-width: 650px">
-                            <table id="pluginList">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Software</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                  <% for (var i = 0; i < plugins.length; i++) { %>
-                                      <tr>
-                                          <td><a href="/plugin/<%= plugins[i].software.url %>/<%= plugins[i].name %>/<%= plugins[i].id %>"><%= plugins[i].name %></a></td>
-                                          <% if (plugins[i].software.globalPlugin !== null) { %>
-                                          <td><a href="/global/<%= plugins[i].software.url %>"><%= plugins[i].software.name %></a></td>
-                                          <% } else { %>
-                                          <td><%= plugins[i].software.name %></td>
-                                          <% } %>
-                                      </tr>
-                                  <% } %>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+<main class="pb-24">
+    <section class="doc-hero">
+        <div class="doc-container py-16 sm:py-20">
+            <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                <div class="space-y-4">
+                    <span class="badge bg-brand-100 text-brand-700">Author</span>
+                    <h1 class="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl"><%= username %></h1>
+                    <p class="text-base leading-relaxed text-slate-600">
+                        All plugins maintained by <%= username %>. Follow the links to inspect charts and adoption numbers.
+                    </p>
                 </div>
+                <% if (user && user.username === username) { %>
+                <a href="/add-plugin" class="btn-primary w-full justify-center px-5 py-3 text-sm sm:w-auto">Add a new plugin</a>
+                <% } %>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="doc-container mt-12 space-y-6">
+        <div class="flex flex-col gap-3 sm:gap-2">
+            <label class="input-label" for="authorPluginSearch">Filter plugins</label>
+            <input id="authorPluginSearch" type="text" class="input-control" placeholder="Search by name or software">
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200 text-sm">
+                    <thead class="bg-slate-100 text-slate-500">
+                    <tr>
+                        <th class="px-4 py-3 text-left font-semibold uppercase tracking-[0.18em]">Name</th>
+                        <th class="px-4 py-3 text-left font-semibold uppercase tracking-[0.18em]">Software</th>
+                    </tr>
+                    </thead>
+                    <tbody id="authorPluginTable" class="divide-y divide-slate-200 text-slate-700">
+                    <% if (plugins.length === 0) { %>
+                    <tr><td colspan="2" class="px-4 py-6 text-center text-sm text-slate-500">No plugins yet.</td></tr>
+                    <% } else { %>
+                    <% for (var i = 0; i < plugins.length; i++) { %>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 font-semibold text-slate-900">
+                            <a class="hover:text-brand-600" href="/plugin/<%= plugins[i].software.url %>/<%= plugins[i].name %>/<%= plugins[i].id %>"><%= plugins[i].name %></a>
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">
+                            <% if (plugins[i].software.globalPlugin) { %>
+                            <a class="hover:text-brand-600" href="/global/<%= plugins[i].software.url %>"><%= plugins[i].software.name %></a>
+                            <% } else { %>
+                            <%= plugins[i].software.name %>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% } %>
+                    <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 </main>
+
 <% include templates/footer.ejs %>
 
-<!--  Scripts-->
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="/javascripts/dataTablesMaterialDesign.js"></script>
+<script>
+    $(function () {
+        const rows = $('#authorPluginTable tr');
+        const searchInput = $('#authorPluginSearch');
+        searchInput.on('input', function () {
+            const query = $(this).val().toLowerCase().trim();
+            rows.each(function () {
+                const text = $(this).text().toLowerCase();
+                $(this).toggle(text.includes(query));
+            });
+        });
+    });
+</script>
 
 <% include templates/globalScripts.ejs %>
 

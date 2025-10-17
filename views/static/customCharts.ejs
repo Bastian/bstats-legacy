@@ -4,215 +4,269 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="description" content="Examples for custom charts.">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-    <title>bStats - Custom Charts</title>
+    <title>bStats - Custom charts</title>
 
-    <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/stylesheets/materialize.min.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
-    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/main.css" />
 </head>
 <body>
 
 <% include ../templates/navigation.ejs %>
-<main>
-    <div class="container">
-        <br>
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="center <%= customColor1 %>-text">Basics</h3>
-                    Adding charts to your plugin consists of two parts:<br>
-                    <ul class="browser-default" style="padding-left: 25px">
-                        <li>Adding charts to your code</li>
-                        <li>Adding charts on the website</li>
-                    </ul>
-                    To add a chart on the website, login and click on the Edit-button on your plugin page:
-                    <br>
-                    <img src="https://i.imgur.com/dhUF0zc.png" style="border:1px solid gray;width:100%;height:100%;max-width:373px;max-height:135px">
-                    <br>
-                    and add your chart:
-                    <br>
-                    <img src="https://i.imgur.com/DKbsXZ9.png" style="border:1px solid gray;width:100%;height:100%;max-width:1183px;max-height:497px">
-                    <br>
-                    Pretty easy, isn't it?
-                </div>
+<main class="pb-24">
+    <section class="doc-hero">
+        <div class="doc-container py-16 sm:py-20">
+            <div class="max-w-3xl space-y-4">
+                <span class="badge bg-brand-100 text-brand-700">Documentation</span>
+                <h1 class="font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">Custom charts</h1>
+                <p class="text-base leading-relaxed text-slate-600">
+                    bStats ships a handful of chart types you can wire into your Metrics instance.
+                    Use these examples as a starting point for your own dashboards.
+                </p>
             </div>
         </div>
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="center <%= customColor1 %>-text">Pies</h3>
-                    <div class="row">
-                        <div id="onlineMode" class="col s12">
-                            <div id="onlineModePie" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-                        </div>
-                    </div>
-                    A <b>Simple Pie</b> is the most basic chart type. It's a great option for config settings as it only accepts
-                    one value per server. Adding the chart to your code is fairly easy:
-                    <script src="https://gist.github.com/Bastian/6ed19dae0322881af4f3dab87075397f.js"></script>
-                    If you need a pie with more options there's the <b>Advanced Pie</b> which allows you to send more than one value.
-                    You can also give the values different 'weights'. There are very few cases in which you need this type of pie, so
-                    I'm sorry for this bad example:
-                    <script src="https://gist.github.com/Bastian/b47279b4ff792153480b50ad0945c963.js"></script>
-                </div>
+    </section>
+
+    <section class="doc-container mt-12 space-y-10">
+        <article class="doc-card space-y-4">
+            <h2 class="doc-card-title">Basics</h2>
+            <p class="text-sm leading-relaxed text-slate-600">
+                Adding a chart consists of two steps: provide the data in your plugin code and register the chart on the website.
+            </p>
+            <ol class="list-decimal space-y-2 pl-6 text-sm text-slate-600">
+                <li>Navigate to your plugin page and click <strong>Edit</strong>.</li>
+                <li>Add a new chart, pick a type, and assign the chart ID you use in code.</li>
+            </ol>
+            <div class="grid gap-4 md:grid-cols-2">
+                <img class="rounded-2xl border border-slate-200" src="https://i.imgur.com/dhUF0zc.png" alt="Plugin edit button" loading="lazy">
+                <img class="rounded-2xl border border-slate-200" src="https://i.imgur.com/DKbsXZ9.png" alt="Add chart dialog" loading="lazy">
             </div>
-        </div>
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="center <%= customColor1 %>-text">Drilldown Pies</h3>
-                    <div class="row">
-                        <div id="os" class="col s12">
-                            <div id="osPie" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-                        </div>
-                    </div>
-                    A <b>Drilldown Pie</b> is the most fancy pie chart. It's a great choice for displaying complex data which
-                    would look like a mess, if a normal pie would be used. Creating one is sadly a little bit ugly, because
-                    of it's complexity:
-                    <script src="https://gist.github.com/Bastian/b35de0cfe951f2d7cacabf65762bfb3d.js"></script>
-                </div>
+        </article>
+
+        <article class="doc-card space-y-6">
+            <div class="space-y-3">
+                <h2 class="doc-card-title">Pie charts</h2>
+                <p class="text-sm leading-relaxed text-slate-600">
+                    Great for categorical data such as configuration switches or version breakdowns.
+                    Simple pies track one value per server. Advanced pies let you combine multiple signals or apply weights.
+                </p>
             </div>
-        </div>
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="center <%= customColor1 %>-text">Line Charts</h3>
-                    <div class="row">
-                        <div id="players">
-                            <div id="playersLineChart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                        </div>
-                    </div>
-                    A <b>Single Line Chart</b> is exactly what the name says: A line chart with only one line. An example for
-                    this type of chart is the servers or players chart every plugin has. Implementing a Single Line Chart is
-                    as simple as implementing a Simple Pie chart:
-                    <script src="https://gist.github.com/Bastian/ea8804db0479c539153f53f1561cc7d3.js"></script>
-                    Now it's your turn. What do you think is a <b>Multi Line Chart</b>? Right! A line chart with multiple lines:
-                    <script src="https://gist.github.com/Bastian/4445ea82bc921dfef82de90b535deb3e.js"></script>
-                    (Note: Multi Line Charts are still in development)
-                </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 md:p-6">
+                <div id="onlineModePie" class="min-h-[320px] w-full"></div>
             </div>
-        </div>
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="center <%= customColor1 %>-text">Bar charts</h3>
-                    <div class="row">
-                        <div id="example" class="col s12">
-                            <div id="exampleBar" style="min-width: 310px; margin: 0 auto"></div>
-                        </div>
-                    </div>
-                    <p>A <b>Simple Bar Chart</b> represents a bar chart, where each category only has 1 bar. The
-                    first value of the map is the category name and the second value of the map is the value of the bar (most of the time you want it to be 1).</p>
-                    <p>An <b>Advanced Bar Chart</b> represents a bar chart, where each category can have multiple bars (defined at the creation).
-                    The first value of the map is the category name and the second value of the map are the values for the bars.
-                    The example you can see above is an advanced pie chart.</p>
-                    <script src="https://gist.github.com/Bastian/474cf7eb3c2997d3cab73e560dce0caa.js"></script>
-                </div>
+            <div class="space-y-4">
+                <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Simple Pie example</h3>
+<pre class="doc-code language-java">metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -&gt; {
+    return Bukkit.getOnlineMode() ? "Online" : "Offline";
+}));</pre>
+                <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Advanced Pie example</h3>
+<pre class="doc-code language-java">metrics.addCustomChart(new Metrics.AdvancedPie("enabled_features", () -&gt; {
+    Map&lt;String, Integer&gt; values = new HashMap&lt;&gt;();
+    values.put("feature_a", plugin.isFeatureAEnabled() ? 1 : 0);
+    values.put("feature_b", plugin.isFeatureBEnabled() ? 1 : 0);
+    return values;
+}));</pre>
             </div>
-        </div>
-    </div>
+        </article>
+
+        <article class="doc-card space-y-6">
+            <div class="space-y-3">
+                <h2 class="doc-card-title">Drilldown pie</h2>
+                <p class="text-sm leading-relaxed text-slate-600">
+                    Ideal when you want to group categories and allow readers to dive deeper—for example,
+                    OS families followed by specific distributions.
+                </p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 md:p-6">
+                <div id="osPie" class="min-h-[320px] w-full"></div>
+            </div>
+<pre class="doc-code language-java">metrics.addCustomChart(new Metrics.DrilldownPie("os_breakdown", () -&gt; {
+    Map&lt;String, Map&lt;String, Integer&gt;&gt; families = new HashMap&lt;&gt;();
+    Map&lt;String, Integer&gt; linux = new HashMap&lt;&gt;();
+    linux.put("Ubuntu", 42);
+    linux.put("Debian", 30);
+    families.put("Linux", linux);
+    Map&lt;String, Integer&gt; windows = new HashMap&lt;&gt;();
+    windows.put("Windows 11", 55);
+    windows.put("Windows Server", 12);
+    families.put("Windows", windows);
+    return families;
+}));</pre>
+        </article>
+
+        <article class="doc-card space-y-6">
+            <div class="space-y-3">
+                <h2 class="doc-card-title">Line charts</h2>
+                <p class="text-sm leading-relaxed text-slate-600">
+                    Track trends over time. Single line charts are perfect for players, servers, or any value that has one sample per interval.
+                    Multi line charts let you compare metrics side by side.
+                </p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 md:p-6">
+                <div id="playersLineChart" class="min-h-[320px] w-full"></div>
+            </div>
+<pre class="doc-code language-java">metrics.addCustomChart(new Metrics.SingleLineChart("daily_players", () -&gt; {
+    return serverAnalytics.getUniquePlayersToday();
+}));</pre>
+<pre class="doc-code language-java">metrics.addCustomChart(new Metrics.MultiLineChart("server_modes", () -&gt; {
+    Map&lt;String, Integer&gt; lines = new HashMap&lt;&gt;();
+    lines.put("Survival", analytics.getSurvivalCount());
+    lines.put("Creative", analytics.getCreativeCount());
+    return lines;
+}));</pre>
+        </article>
+
+        <article class="doc-card space-y-6">
+            <div class="space-y-3">
+                <h2 class="doc-card-title">Bar charts</h2>
+                <p class="text-sm leading-relaxed text-slate-600">
+                    Surface rankings or option adoption. Simple bar charts display a single value per category. Advanced bar charts support multiple bars per category.
+                </p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 md:p-6">
+                <div id="exampleBar" class="min-h-[320px] w-full"></div>
+            </div>
+<pre class="doc-code language-java">metrics.addCustomChart(new Metrics.SimpleBarChart("feature_usage", () -&gt; {
+    Map&lt;String, Integer&gt; bars = new HashMap&lt;&gt;();
+    bars.put("Enabled", plugin.getUsersWithFeatureEnabled());
+    bars.put("Disabled", plugin.getUsersWithFeatureDisabled());
+    return bars;
+}));</pre>
+        </article>
+    </section>
 </main>
+
 <% include ../templates/footer.ejs %>
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<!-- Materialize -->
-<script src="/javascripts/materialize/materialize.min.js"></script>
-<script src="/javascripts/materialize/init.js"></script>
-<!-- Charts -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://code.highcharts.com/stock/6.0.1/highstock.js"></script>
 <script src="https://code.highcharts.com/maps/6.0.1/modules/map.js"></script>
 <script src="https://code.highcharts.com/6.0.1/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/6.0.1/modules/no-data-to-display.js"></script>
-<script src="/javascripts/charts/themes/chartTheme.js"></script> <!-- The chart theme -->
-<script src="/javascripts/charts/charts.js"></script> <!-- The charts -->
-<script type="application/javascript">
+<script src="/javascripts/charts/themes/chartTheme.js"></script>
+<script src="/javascripts/charts/charts.js"></script>
+<script>
     function getPluginId() {
         return '1';
     }
+    function updatePlayersBadge() {}
+    function updateServersBadge() {}
+
     Highcharts.wrap(Highcharts.Chart.prototype, 'getContainer', function (proceed) {
         proceed.call(this);
         this.container.style.background = '';
     });
 
-    var data = {
-        valueName: 'Servers',
-        categories: ['Feature 1', 'Feature 2'],
-        series: [{
-            name: 'disabled',
-            data: [1337, 226]
+    $(function () {
+        const pieData = [{
+            name: 'Online',
+            y: 86
         }, {
-            name: 'enabled',
-            data: [123, 1234]
-        }]
-    }
-    $('#exampleBar').highcharts({
-        chart: {
-            type: 'bar',
-            renderTo: 'container',
-            marginTop: 40,
-            marginBottom: 80,
-            height: data.categories.length * data.series.length * (30 + data.series.length * 15) + 120 // 20px per data item plus top and bottom margins
-        },
-        title: {
-            text: '<a href="#example" style="text-decoration: none; color: inherit;">Example Bar Chart</a>'
-        },
-        plotOptions: {
-            bar: {
-                dataLabels: {
-                    enabled: true
-                }
-            },
-            series: {
-                pointWidth: 25
+            name: 'Offline',
+            y: 14
+        }];
+        Highcharts.chart('onlineModePie', {
+            chart: { type: 'pie', backgroundColor: 'transparent' },
+            title: { text: null },
+            tooltip: { pointFormat: '<b>{point.percentage:.1f}%</b>' },
+            series: [{ data: pieData }]
+        });
+
+        Highcharts.chart('osPie', {
+            chart: { type: 'pie', backgroundColor: 'transparent' },
+            title: { text: null },
+            tooltip: { pointFormat: '<b>{point.percentage:.1f}%</b>' },
+            series: [{
+                data: [{
+                    name: 'Linux',
+                    y: 48,
+                    drilldown: 'Linux'
+                }, {
+                    name: 'Windows',
+                    y: 37,
+                    drilldown: 'Windows'
+                }, {
+                    name: 'macOS',
+                    y: 15,
+                    drilldown: 'macOS'
+                }]
+            }],
+            drilldown: {
+                series: [{
+                    id: 'Linux',
+                    data: [
+                        ['Ubuntu', 20],
+                        ['Debian', 12],
+                        ['Other', 16]
+                    ]
+                }, {
+                    id: 'Windows',
+                    data: [
+                        ['Windows 11', 22],
+                        ['Windows 10', 10],
+                        ['Server', 5]
+                    ]
+                }, {
+                    id: 'macOS',
+                    data: [
+                        ['Ventura', 7],
+                        ['Monterey', 5],
+                        ['Other', 3]
+                    ]
+                }]
             }
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size: 18px"><u><b>{point.key}</b></u></span><br/>',
-            pointFormat: '<b>Total</b>: {point.y} ' + data.valueName
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'top',
-            x: -40,
-            y: 80,
-            floating: true,
-            borderWidth: 1,
-            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-            shadow: true
-        },
-        exporting: {
-            enabled: false
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: data.valueName,
-                align: 'high'
+        });
+
+        Highcharts.stockChart('playersLineChart', {
+            chart: { backgroundColor: 'transparent' },
+            rangeSelector: { selected: 1 },
+            title: { text: null },
+            series: [{
+                name: 'Players',
+                data: (function () {
+                    const data = [];
+                    const base = new Date().getTime();
+                    for (let i = 6; i >= 0; i--) {
+                        data.push([base - i * 86400000, Math.round(100 + Math.random() * 60)]);
+                    }
+                    return data;
+                })()
+            }]
+        });
+
+        const barData = {
+            valueName: 'Servers',
+            categories: ['Feature A', 'Feature B'],
+            series: [{
+                name: 'Disabled',
+                data: [1337, 226]
+            }, {
+                name: 'Enabled',
+                data: [123, 1234]
+            }]
+        };
+
+        Highcharts.chart('exampleBar', {
+            chart: {
+                type: 'bar',
+                backgroundColor: 'transparent',
+                height: barData.categories.length * barData.series.length * 28 + 180
             },
-            labels: {
-                overflow: 'justify'
-            }
-        },
-        xAxis: {
-            categories: data.categories
-        },
-        series: data.series
+            title: { text: null },
+            tooltip: {
+                headerFormat: '<span style="font-size: 14px"><b>{point.key}</b></span><br/>',
+                pointFormat: '<b>{series.name}</b>: {point.y} ' + barData.valueName
+            },
+            legend: {
+                align: 'left',
+                verticalAlign: 'top'
+            },
+            xAxis: { categories: barData.categories },
+            yAxis: { min: 0, title: { text: barData.valueName } },
+            series: barData.series
+        });
     });
-</script>
-
-<script type="application/javascript">
-    function getPluginId() {
-        return "1";
-    }
-
-    function updatePlayersBadge(data) {
-    }
-
-    function updateServersBadge(data) {
-    }
 </script>
 
 <% include ../templates/globalScripts.ejs %>

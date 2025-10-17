@@ -1,111 +1,233 @@
-/**
- * Sand-Signika theme for Highcharts JS
- * @author Torstein Honsi
- */
-
-// Load the fonts
-Highcharts.createElement('link', {
-    href: 'https://fonts.googleapis.com/css?family=Signika:400,700',
-    rel: 'stylesheet',
-    type: 'text/css'
-}, null, document.getElementsByTagName('head')[0]);
-
-// Add the background image to the container
-Highcharts.wrap(Highcharts.Chart.prototype, 'getContainer', function (proceed) {
-    proceed.call(this);
-    this.container.style.background = 'url(/images/backgrounds/sand.jpg)';
-});
-
-Highcharts.theme = {
-    colors: ["#F44336", "#4CAF50", "#2196F3", "#FF9800", "#FFEB3B", "#009688", "#E91E63",
-        "#795548", "#607D8B", "#3F51B5", "#9C27B0"],
-    chart: {
-        backgroundColor: null,
-        style: {
-            fontFamily: "Signika, serif"
-        }
-    },
-    title: {
-        useHTML: true,
-        style: {
-            color: 'black',
-            fontSize: '16px',
-            fontWeight: 'bold'
-        }
-    },
-    credits: { // We mention HighCharts often enough
-        enabled: false
-    },
-    subtitle: {
-        style: {
-            color: 'black'
-        }
-    },
-    tooltip: {
-        borderWidth: 0
-    },
-    legend: {
-        itemStyle: {
-            fontWeight: 'bold',
-            fontSize: '13px'
-        }
-    },
-    xAxis: {
-        labels: {
-            style: {
-                color: '#6e6e70'
-            }
-        }
-    },
-    yAxis: {
-        labels: {
-            style: {
-                color: '#6e6e70'
-            }
-        }
-    },
-    plotOptions: {
-        series: {
-            shadow: true
-        },
-        candlestick: {
-            lineColor: '#404048'
-        },
-        map: {
-            shadow: false
-        }
-    },
-
-    // Highstock specific
-    navigator: {
-        xAxis: {
-            gridLineColor: '#D0D0D8'
-        }
-    },
-    rangeSelector: {
-        buttonTheme: {
-            fill: 'white',
-            stroke: '#C0C0C8',
-            'stroke-width': 1,
-            states: {
-                select: {
-                    fill: '#D0D0D8'
-                }
-            }
-        }
-    },
-    scrollbar: {
-        trackBorderColor: '#C0C0C8'
-    },
-
-    // General
-    background2: '#E0E0E8',
-
-    global: {
-        useUTC: false
+(function (Highcharts) {
+    if (typeof Highcharts === 'undefined') {
+        return;
     }
 
-};
+    var palette = [
+        '#10B981', // emerald
+        '#0EA5E9', // sky
+        '#6366F1', // indigo
+        '#F97316', // orange
+        '#F59E0B', // amber
+        '#14B8A6', // teal
+        '#EC4899', // pink
+        '#8B5CF6', // violet
+        '#38BDF8', // light sky
+        '#F472B6'  // fuchsia
+    ];
 
-// Apply the theme
-Highcharts.setOptions(Highcharts.theme);
+    Highcharts.setOptions({
+        colors: palette,
+        chart: {
+            backgroundColor: 'transparent',
+            plotBackgroundColor: 'transparent',
+            style: {
+                fontFamily: '"Inter", sans-serif',
+                color: '#0f172a'
+            },
+            spacing: [18, 18, 18, 18],
+            plotBorderColor: 'transparent'
+        },
+        title: {
+            style: {
+                color: '#0f172a',
+                fontWeight: 600,
+                fontSize: '15px'
+            }
+        },
+        subtitle: {
+            style: {
+                color: '#64748b',
+                fontSize: '12px'
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        tooltip: {
+            backgroundColor: '#0f172a',
+            borderWidth: 0,
+            borderRadius: 12,
+            shadow: {
+                color: 'rgba(15, 23, 42, 0.18)',
+                offsetX: 0,
+                offsetY: 12,
+                opacity: 0.2,
+                width: 20
+            },
+            style: {
+                color: '#f8fafc',
+                fontSize: '12px',
+                fontWeight: 500
+            }
+        },
+        legend: {
+            align: 'left',
+            verticalAlign: 'top',
+            itemStyle: {
+                color: '#0f172a',
+                fontWeight: 500,
+                fontSize: '12px'
+            },
+            itemHoverStyle: {
+                color: '#0f172a'
+            }
+        },
+        xAxis: {
+            lineColor: '#e2e8f0',
+            tickColor: '#e2e8f0',
+            gridLineColor: '#f1f5f9',
+            gridLineDashStyle: 'Dash',
+            labels: {
+                style: {
+                    color: '#64748b',
+                    fontSize: '11px'
+                }
+            },
+            title: {
+                style: {
+                    color: '#64748b',
+                    fontWeight: 500
+                }
+            }
+        },
+        yAxis: {
+            gridLineColor: '#f1f5f9',
+            gridLineDashStyle: 'Dash',
+            labels: {
+                style: {
+                    color: '#64748b',
+                    fontSize: '11px'
+                }
+            },
+            title: {
+                style: {
+                    color: '#64748b',
+                    fontWeight: 500
+                }
+            }
+        },
+        plotOptions: {
+            series: {
+                marker: {
+                    lineWidth: 0,
+                    radius: 4,
+                    symbol: 'circle'
+                },
+                shadow: false,
+                states: {
+                    hover: {
+                        enabled: true
+                    }
+                }
+            },
+            line: {
+                lineWidth: 2.5
+            },
+            spline: {
+                lineWidth: 2.5
+            },
+            area: {
+                fillOpacity: 0.18
+            },
+            bar: {
+                borderRadius: 6,
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 600,
+                        color: '#0f172a'
+                    }
+                }
+            },
+            column: {
+                borderRadius: 6
+            },
+            pie: {
+                borderWidth: 0,
+                dataLabels: {
+                    style: {
+                        color: '#0f172a',
+                        fontWeight: 600
+                    }
+                }
+            },
+            map: {
+                shadow: false,
+                nullColor: '#e2e8f0'
+            }
+        },
+        navigator: {
+            maskFill: 'rgba(16, 185, 129, 0.2)',
+            series: {
+                color: '#10B981',
+                lineColor: '#10B981'
+            }
+        },
+        rangeSelector: {
+            inputEnabled: false,
+            buttonTheme: {
+                fill: 'transparent',
+                stroke: '#cbd5f5',
+                'stroke-width': 1,
+                padding: 2,
+                height: 22,
+                style: {
+                    color: '#475569',
+                    fontWeight: 600,
+                    fontSize: '11px',
+                    lineHeight: '14px'
+                },
+                states: {
+                    hover: {
+                        fill: '#e2e8f0'
+                    },
+                    select: {
+                        fill: '#10B981',
+                        style: {
+                            color: '#ffffff'
+                        }
+                    }
+                }
+            },
+            labelStyle: {
+                color: '#475569'
+            }
+        },
+        scrollbar: {
+            barBackgroundColor: '#cbd5f5',
+            trackBackgroundColor: '#e2e8f0',
+            trackBorderColor: '#cbd5f5'
+        },
+        mapNavigation: {
+            buttonOptions: {
+                theme: {
+                    fill: '#f1f5f9',
+                    stroke: '#cbd5f5',
+                    'stroke-width': 1,
+                    r: 6,
+                    style: {
+                        color: '#475569'
+                    },
+                    states: {
+                        hover: {
+                            fill: '#10B981',
+                            style: {
+                                color: '#ffffff'
+                            }
+                        },
+                        select: {
+                            fill: '#10B981',
+                            style: {
+                                color: '#ffffff'
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        global: {
+            useUTC: false
+        }
+    });
+})(Highcharts);

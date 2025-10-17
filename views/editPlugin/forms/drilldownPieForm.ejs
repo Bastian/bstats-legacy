@@ -1,94 +1,50 @@
-<div class="depending_box drilldown_pie">
-    <div id="drilldown_pie_form" class="col s12">
-        <!-- Chart title -->
-        <br>
-        <div class="input-field">
-            <input placeholder="The title of the chart" id="chart_title_drilldown_pie" type="text" class="validate"
-                   pattern="^[-_a-zA-Z0-9]+(\s[-_a-zA-Z0-9]+)*$" length="32" name="chartTitle">
-            <label for="chart_title_drilldown_pie">Chart title</label>
+<div data-chart-form="drilldown_pie" class="hidden space-y-5">
+    <div class="space-y-2">
+        <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Drilldown Pie</h3>
+        <p class="text-sm text-slate-600">
+            Group related values and let readers click deeper. Provide parent categories and nested entries in your code.
+        </p>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+        <div class="input-group">
+            <label class="input-label" for="chart_title_drilldown_pie">Chart title</label>
+            <input id="chart_title_drilldown_pie" type="text" class="input-control" maxlength="32" required>
         </div>
-        <!-- Chart id -->
-        <div class="input-field">
-            <input placeholder="Give the chart an unique id (e.g. 'myChart1')" id="chart_id_drilldown_pie" class="validate"
-                   pattern="^[-_a-zA-Z0-9]+([-_a-zA-Z0-9]+)*$" length="32" type="text" name="chartId">
-            <label for="chart_id_drilldown_pie">Chart id</label>
-        </div>
-        <!-- Filter on/off -->
-        <div class="divider"></div>
-        <br>
-        <div class="switch">
-            <b>Filter data</b>
-            <label>
-                <input class="checkboxFilter" type="checkbox" name="filterEnabled">
-                <span class="lever"></span>
-            </label>
-        </div>
-        <br>
-        <div class="filterOptions">
-            <!-- Regex on/off -->
-            <div class="divider"></div>
-            <br>
-            <div class="input-field">
-                <input placeholder="Leave empty for no filtering" type="text" class="validate"
-                       pattern="^[0-9]*$" length="16" name="maxValue" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
-                <label for="maxValue">Max value per pie slice</label>
-            </div>
-            <br>
-            <div class="switch">
-                <!-- Webdesign like a pro! (&nbsp; rulez) -->
-                <b>Regex&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
-                <label>
-                    <input type="checkbox" name="regexEnabled">
-                    <span class="lever"></span>
-                </label>
-            </div>
-            <br>
-            <!-- Switch Whitelist/Blacklist -->
-            <div class="divider"></div>
-            <br>
-            <div class="switch">
-                <b>Blacklist&nbsp;&nbsp;&nbsp;&nbsp;</b>
-                <label>
-                    <input class="checkboxBlacklist" type="checkbox" name="blacklistEnabled">
-                    <span class="lever"></span>
-                </label>
-            </div>
-            <br>
-            <!-- White-/Blacklist -->
-            <div class="divider"></div>
-            <br>
-            <b class="whitelistLabel" name="filter">Whitelist: </b><b class="blacklistLabel">Blacklist: </b><div id="drilldown_pie_filter" class="chips"></div>
-        </div>
-        <!-- Submit button -->
-        <div class='row'>
-            <button type='submit' name='btn_submit' class='col s12 l6 offset-l3 btn btn-large waves-effect <%= customColor1 %>' onclick="createDrilldownPieChart()">
-                Submit Chart
-            </button>
+        <div class="input-group">
+            <label class="input-label" for="chart_id_drilldown_pie">Chart ID</label>
+            <input id="chart_id_drilldown_pie" type="text" class="input-control" maxlength="32" required>
         </div>
     </div>
+    <div class="input-group">
+        <label class="input-label" for="drilldownPieMaxValue">Max value per slice</label>
+        <input id="drilldownPieMaxValue" type="number" min="0" class="input-control" placeholder="Leave empty for unlimited">
+    </div>
+
+    <label class="flex items-center gap-2 text-sm text-slate-600">
+        <input type="checkbox" id="drilldownPieFilterEnabled" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500" data-filter-toggle data-target="#drilldownPieFilterPanel">
+        <span>Filter values before they are stored</span>
+    </label>
+    <div id="drilldownPieFilterPanel" class="hidden space-y-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+        <div class="input-group">
+            <label class="input-label" for="drilldownPieFilterMode">Mode</label>
+            <select id="drilldownPieFilterMode" class="input-control">
+                <option value="whitelist">Whitelist (only allow)</option>
+                <option value="blacklist">Blacklist (block)</option>
+            </select>
+        </div>
+        <label class="flex items-center gap-2 text-sm text-slate-600">
+            <input type="checkbox" id="drilldownPieRegex" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+            <span>Treat values as regular expressions</span>
+        </label>
+        <div class="input-group">
+            <label class="input-label" for="drilldownPieFilterValues">Values (one per line)</label>
+            <textarea id="drilldownPieFilterValues" class="input-control min-h-[120px]" placeholder="category:value&#10;category:other-value"></textarea>
+        </div>
+    </div>
+
+    <div class="doc-callout doc-callout-note">
+        Remember to provide the drilldown structure in your Metrics implementation: parent slices in <code class="font-mono text-slate-700">seriesData</code> and their children in <code class="font-mono text-slate-700">drilldownData</code>.
+    </div>
+
+    <button type="button" id="createDrilldownPie" class="btn-primary w-full justify-center">Create chart</button>
 </div>
-
-<script type="application/javascript">
-    $(document).on('input','#chart_title_drilldown_pie',function () {
-        document.getElementById('chart_id_drilldown_pie').value = $('#chart_title_drilldown_pie').val().toLowerCase().replace(/ /g, "_");
-    });
-
-    function createDrilldownPieChart() {
-        let currentForm = $('#drilldown_pie_form');
-        let filterData = $('#drilldown_pie_filter').material_chip('data');
-        let filter = [];
-        for (let i = 0; i < filterData.length; i++) {
-            filter.push(filterData[i].tag);
-        }
-        addChart({
-            chartTitle: $("#chart_title_drilldown_pie").val(),
-            chartId: $("#chart_id_drilldown_pie").val(),
-            filterEnabled: currentForm.find('input[name="filterEnabled"]').is(":checked"),
-            filter: filter,
-            maxValue: currentForm.find('input[name="maxValue"]').val(),
-            regexEnabled: currentForm.find('input[name="regexEnabled"]').is(":checked"),
-            blacklistEnabled: currentForm.find('input[name="blacklistEnabled"]').is(":checked"),
-            chart_type: 'drilldown_pie'
-        });
-    }
-</script>

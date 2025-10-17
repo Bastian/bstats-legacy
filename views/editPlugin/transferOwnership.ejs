@@ -1,49 +1,11 @@
-<h5 class="<%= customColor1 %>-text col s12 center-align">Transfer ownership</h5>
-<br><br>
-<div class="col s12 z-depth-1 grey lighten-4 row">
-    <br>
-    <div class="input-field">
-        <input placeholder="Please type in the name of new owner." id="new_owner" class="validate"
-               type="text" name="newOwner">
-        <label for="new_owner">New owner</label>
+<div class="space-y-3">
+    <h2 class="doc-card-title">Transfer ownership</h2>
+    <p class="text-sm leading-relaxed text-slate-600">
+        Move this plugin to another account. The new owner will have full control over charts and settings.
+    </p>
+    <div class="input-group">
+        <label class="input-label" for="new_owner">New owner username</label>
+        <input id="new_owner" type="text" class="input-control" placeholder="Username" required>
     </div>
-    <br>
-    <div class="col s12">
-        <div class='row'>
-            <button type='submit' id='transfer_button' class='col s12 l6 offset-l3 waves-effect waves-light btn-large red' onclick="transferOwnership()">
-                Transfer
-            </button>
-        </div>
-    </div>
+    <button id="transfer_button" type="button" class="btn-primary w-full justify-center">Transfer ownership</button>
 </div>
-
-<!-- Transferred ownership modal -->
-<div id="transferredOwnershipModal" class="modal">
-    <div class="modal-content">
-        <h4 class="green-text" id="transferredOwnershipModalTitle">Transferred Ownership</h4>
-        <p id="transferredOwnershipModalText"><b id="newOwnerName"></b> is now the new owner of this plugin!</p>
-    </div>
-    <div class="modal-footer">
-        <b><a href="#" class="modal-action modal-close waves-effect btn-flat green-text">OK</a></b>
-    </div>
-</div>
-
-<script type="application/javascript">
-    function transferOwnership() {
-        $.post(window.location.href, {
-            action: 'transferOwnership',
-            newOwner: $("#new_owner").val()
-        }).done(function(data) {
-            $('#newOwnerName').text($("#new_owner").val());
-            $('#transferredOwnershipModal').modal('open');
-        }).fail(function(err) {
-                if (err.responseJSON.error === undefined) {
-                    showErrorModal('Ooops', 'Something happened, which should not happen. Please report this bug.');
-                } else {
-                    showErrorModal('Error', err.responseJSON.error + '.');
-                }
-                console.log(err);
-            }
-        );
-    }
-</script>
