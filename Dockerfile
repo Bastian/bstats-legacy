@@ -6,7 +6,8 @@ COPY . .
 
 ENV NODE_ENV=production
 
-RUN npm ci
+RUN npm ci \
+ && npm run build:css
 
 EXPOSE 3000
 
